@@ -59,3 +59,20 @@ export function proximasOcorrencias(
 		.filter((o) => o.momento >= agora)
 		.slice(0, limite);
 }
+
+/**
+ * Status de um registro de tarefa (§4.1): comparado à ocorrência mais próxima
+ * do dia, passou da tolerância → 'atrasado'. Sem ocorrência no dia → 'realizado'.
+ */
+export function statusDoRegistro(task: CareTask, ocorrido: Date): 'realizado' | 'atrasado' {
+	const ocorrencias = gerarOcorrenciasDoDia([task], ocorrido);
+	if (ocorrencias.length === 0) return 'realizado';
+	const maisProxima = ocorrencias.reduce((melhor, atual) =>
+		Math.abs(atual.momento.getTime() - ocorrido.getTime()) <
+		Math.abs(melhor.momento.getTime() - ocorrido.getTime())
+			? atual
+			: melhor
+	);
+	const atrasoMin = (ocorrido.getTime() - maisProxima.momento.getTime()) / 60_000;
+	return atrasoMin > task.toleranciaMin ? 'atrasado' : 'realizado';
+}

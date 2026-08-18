@@ -37,9 +37,29 @@ export const eventsMock: EventService = {
 			foraDoPadrao: false,
 			sincronizado: false
 		}));
-		await db.transaction('rw', db.events, db.readings, async () => {
+		await db.transaction('rw', [db.events, db.readings, db.tasks, db.alerts], async () => {
 			await db.events.add(evento);
 			if (readings.length > 0) await db.readings.bulkAdd(readings);
+			// §5.1: salvar medicação realizada debita o estoque da caixa
+			if (evento.tipo === 'medicacao' && evento.status !== 'pulado' && evento.taskId) {
+				const tarefa = await db.tasks.get(evento.taskId);
+				const estoque = tarefa?.medicacao?.estoque;
+				if (tarefa && estoque) {
+					estoque.quantidadeAtual = Math.max(0, estoque.quantidadeAtual - estoque.consumoPorDose);
+					await db.tasks.put(tarefa);
+				}
+			}
+			// §4.1: registrar a tarefa resolve o alerta de pendência/atraso dela
+			if (evento.taskId) {
+				await db.alerts
+					.where('[tipo+referenciaId]')
+					.anyOf([
+						['medicacao_atrasada', evento.taskId],
+						['tarefa_pendente', evento.taskId]
+					])
+					.filter((a) => !a.reconhecidoEm)
+					.delete();
+			}
 		});
 		return evento;
 	},

@@ -1,6 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import type { CareTask } from '../types';
-import { gerarOcorrenciasDoDia, proximasOcorrencias, tarefaValeNoDia } from './ocorrencias';
+import {
+	gerarOcorrenciasDoDia,
+	proximasOcorrencias,
+	statusDoRegistro,
+	tarefaValeNoDia
+} from './ocorrencias';
 
 // qua, 12 ago 2026 (getDay() = 3)
 const quarta = new Date(2026, 7, 12, 10, 0, 0);
@@ -71,6 +76,23 @@ describe('gerarOcorrenciasDoDia (§4.1)', () => {
 			medicacao: undefined
 		};
 		expect(gerarOcorrenciasDoDia([refeicao], quarta)).toHaveLength(1);
+	});
+});
+
+describe('statusDoRegistro (§4.1)', () => {
+	it('dentro da tolerância é realizado; depois dela, atrasado', () => {
+		// horário 08:00, tolerância 30 → 08:25 ok; 08:45 atrasado
+		expect(statusDoRegistro(base, new Date(2026, 7, 12, 8, 25))).toBe('realizado');
+		expect(statusDoRegistro(base, new Date(2026, 7, 12, 8, 45))).toBe('atrasado');
+	});
+
+	it('compara com a ocorrência mais próxima (20:00 à noite, não 08:00)', () => {
+		expect(statusDoRegistro(base, new Date(2026, 7, 12, 20, 10))).toBe('realizado');
+	});
+
+	it('dia sem ocorrência esperada → registro avulso realizado', () => {
+		const somenteSegunda = { ...base, diasSemana: [1] };
+		expect(statusDoRegistro(somenteSegunda, new Date(2026, 7, 12, 8, 45))).toBe('realizado');
 	});
 });
 

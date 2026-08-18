@@ -2,6 +2,7 @@
 	import { invalidateAll } from '$app/navigation';
 	import Avatar from '$lib/components/Avatar.svelte';
 	import TarefaForm from '$lib/components/TarefaForm.svelte';
+	import Timeline from '$lib/components/Timeline.svelte';
 	import { calcularIdade } from '$lib/domain/idade';
 	import type { CareTask } from '$lib/domain/types';
 	import { services } from '$lib/services';
@@ -68,7 +69,7 @@
 
 	<section class="p-4">
 		{#if aba === 'timeline'}
-			<p class="p-6 text-center text-sm text-ink/50">Linha do tempo chega na Fase 6.</p>
+			<Timeline patientId={data.paciente.id} nomeCuidador={data.cuidador.nome} />
 		{:else if aba === 'rotinas'}
 			{#if editandoTarefa}
 				<h2 class="mb-3 text-lg font-bold text-navy">

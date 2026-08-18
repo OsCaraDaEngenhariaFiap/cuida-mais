@@ -2,15 +2,18 @@
 	import { onMount } from 'svelte';
 	import { page } from '$app/state';
 	import { reavaliarAlertas } from '$lib/services/alertas-engine';
+	import { agendarNotificacoes } from '$lib/services/notificacoes';
 	import { atualizarContagemAlertas, contagemAlertas } from '$lib/stores/alertas.svelte';
 
 	let { children } = $props();
 
-	// §4: motor reavaliado ao abrir o app e a cada 60s por timer
+	// §4: motor reavaliado ao abrir o app e a cada 60s por timer;
+	// no mesmo ciclo, os disparos de notificação do dia são (re)agendados (§7)
 	onMount(() => {
 		const rodar = async () => {
 			await reavaliarAlertas();
 			await atualizarContagemAlertas();
+			await agendarNotificacoes();
 		};
 		void rodar();
 		const timer = setInterval(() => void rodar(), 60_000);

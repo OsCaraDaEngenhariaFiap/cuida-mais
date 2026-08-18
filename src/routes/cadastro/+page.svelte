@@ -36,7 +36,7 @@
 
 <main class="mx-auto flex min-h-dvh w-full max-w-md flex-col justify-center gap-8 p-6">
 	<header class="text-center">
-		<h1 class="text-2xl font-bold text-navy">Criar conta</h1>
+		<h1 class="text-2xl font-bold text-marca">Criar conta</h1>
 		<p class="mt-1 text-sm text-ink/60">Para o cuidador — a família acessa por link, sem conta</p>
 	</header>
 
@@ -48,7 +48,7 @@
 				required
 				autocomplete="name"
 				bind:value={nome}
-				class="touch-target rounded-(--radius-card) border border-ink/20 px-4 text-base outline-navy"
+				class="touch-target rounded-(--radius-card) border border-ink/20 px-4 text-base outline-marca"
 			/>
 		</label>
 		<label class="flex flex-col gap-1">
@@ -58,7 +58,7 @@
 				required
 				autocomplete="email"
 				bind:value={email}
-				class="touch-target rounded-(--radius-card) border border-ink/20 px-4 text-base outline-navy"
+				class="touch-target rounded-(--radius-card) border border-ink/20 px-4 text-base outline-marca"
 			/>
 		</label>
 		<label class="flex flex-col gap-1">
@@ -69,7 +69,7 @@
 				minlength="6"
 				autocomplete="new-password"
 				bind:value={senha}
-				class="touch-target rounded-(--radius-card) border border-ink/20 px-4 text-base outline-navy"
+				class="touch-target rounded-(--radius-card) border border-ink/20 px-4 text-base outline-marca"
 			/>
 		</label>
 		<label class="flex flex-col gap-1">

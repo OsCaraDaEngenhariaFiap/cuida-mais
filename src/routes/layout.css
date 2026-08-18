@@ -6,6 +6,10 @@
 	--color-navy-600: #1e3a5f;
 	--color-navy-50: #eef2f7;
 	--color-ink: #1f2937;
+	/* Superfícies e acento de texto: trocam no tema escuro (fase 10) */
+	--color-fundo: #ffffff;
+	--color-superficie: #ffffff;
+	--color-marca: #152a47;
 
 	/* Semântica de cor fixa: verde = realizado · azul = medicação/aferição ·
 	   laranja = atenção · vermelho = crítico · roxo = comunicação */
@@ -30,6 +34,25 @@
 	min-width: 48px;
 }
 
+/* Tema escuro (§10, fase 10): mesmos tokens, valores trocados */
+:root[data-tema='escuro'] {
+	--color-fundo: #0b1425;
+	--color-superficie: #14213b;
+	--color-marca: #a9c3e8;
+	--color-ink: #d7e1ef;
+	--color-navy-50: #1c2c4b;
+}
+
+@media (prefers-color-scheme: dark) {
+	:root[data-tema='auto'] {
+		--color-fundo: #0b1425;
+		--color-superficie: #14213b;
+		--color-marca: #a9c3e8;
+		--color-ink: #d7e1ef;
+		--color-navy-50: #1c2c4b;
+	}
+}
+
 @layer base {
 	html {
 		font-family: var(--font-sans);
@@ -37,7 +60,7 @@
 	}
 
 	body {
-		background-color: white;
+		background-color: var(--color-fundo);
 		color: var(--color-ink);
 	}
 }

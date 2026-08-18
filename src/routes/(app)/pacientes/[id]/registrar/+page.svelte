@@ -126,7 +126,7 @@
 </svelte:head>
 
 <div class="mx-auto w-full max-w-lg p-4">
-	<h1 class="text-2xl font-bold text-navy">Registro rápido</h1>
+	<h1 class="text-2xl font-bold text-marca">Registro rápido</h1>
 	<p class="mb-4 text-sm text-ink/60">{data.paciente.nome}</p>
 
 	{#if !tipoCuidado}
@@ -196,7 +196,7 @@
 
 			{#if tipoCuidado === 'medicacao' && data.tarefa?.medicacao}
 				<div class="rounded-(--radius-card-lg) bg-navy-50 p-4">
-					<p class="font-semibold text-navy">{data.tarefa.titulo}</p>
+					<p class="font-semibold text-marca">{data.tarefa.titulo}</p>
 					<p class="text-sm text-ink/70">
 						{data.tarefa.medicacao.dose} · via {data.tarefa.medicacao.via}
 					</p>
@@ -214,14 +214,14 @@
 						type="text"
 						bind:value={titulo}
 						placeholder={tipoCuidado === 'medicacao' ? 'ex.: Dipirona 500mg' : 'ex.: Banho de aspersão'}
-						class="touch-target rounded-(--radius-card) border border-ink/20 px-4 text-base outline-navy"
+						class="touch-target rounded-(--radius-card) border border-ink/20 px-4 text-base outline-marca"
 					/>
 				</label>
 			{/if}
 
 			{#if tipoCuidado === 'medicacao'}
 				<section class="flex flex-col gap-2 rounded-(--radius-card-lg) border border-ink/10 p-3">
-					<h3 class="text-sm font-semibold text-navy">
+					<h3 class="text-sm font-semibold text-marca">
 						Foto do momento {preferencias.fotoObrigatoriaMedicacao ? '(obrigatória)' : '(opcional)'}
 					</h3>
 					{#if foto}
@@ -260,7 +260,7 @@
 												type="button"
 												onclick={() => (justificativaSemFoto = sugestao)}
 												class="rounded-full border border-ink/20 px-3 py-1 text-xs
-													{justificativaSemFoto === sugestao ? 'border-navy bg-navy text-white' : 'text-ink/60'}"
+													{justificativaSemFoto === sugestao ? 'border-marca bg-navy text-white' : 'text-ink/60'}"
 											>
 												{sugestao}
 											</button>
@@ -270,7 +270,7 @@
 										type="text"
 										bind:value={justificativaSemFoto}
 										placeholder="justificativa curta"
-										class="touch-target rounded-(--radius-card) border border-ink/20 px-4 text-base outline-navy"
+										class="touch-target rounded-(--radius-card) border border-ink/20 px-4 text-base outline-marca"
 									/>
 								</label>
 							{/if}
@@ -285,7 +285,7 @@
 					type="datetime-local"
 					bind:value={ocorridoEm}
 					max={format(new Date(), "yyyy-MM-dd'T'HH:mm")}
-					class="touch-target rounded-(--radius-card) border border-ink/20 px-4 text-base outline-navy"
+					class="touch-target rounded-(--radius-card) border border-ink/20 px-4 text-base outline-marca"
 				/>
 			</label>
 
@@ -307,7 +307,7 @@
 				<textarea
 					rows="2"
 					bind:value={observacao}
-					class="rounded-(--radius-card) border border-ink/20 p-4 text-base outline-navy"
+					class="rounded-(--radius-card) border border-ink/20 p-4 text-base outline-marca"
 				></textarea>
 			</label>
 

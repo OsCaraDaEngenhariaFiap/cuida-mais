@@ -30,7 +30,7 @@
 		<div class="mx-auto mb-3 flex size-16 items-center justify-center rounded-2xl bg-navy text-3xl">
 			🤍
 		</div>
-		<h1 class="text-3xl font-bold text-navy">Cuida+</h1>
+		<h1 class="text-3xl font-bold text-marca">Cuida+</h1>
 		<p class="mt-1 text-sm text-ink/60">Registro diário de cuidados</p>
 	</header>
 
@@ -42,7 +42,7 @@
 				required
 				autocomplete="email"
 				bind:value={email}
-				class="touch-target rounded-(--radius-card) border border-ink/20 px-4 text-base outline-navy"
+				class="touch-target rounded-(--radius-card) border border-ink/20 px-4 text-base outline-marca"
 			/>
 		</label>
 		<label class="flex flex-col gap-1">
@@ -52,7 +52,7 @@
 				required
 				autocomplete="current-password"
 				bind:value={senha}
-				class="touch-target rounded-(--radius-card) border border-ink/20 px-4 text-base outline-navy"
+				class="touch-target rounded-(--radius-card) border border-ink/20 px-4 text-base outline-marca"
 			/>
 		</label>
 

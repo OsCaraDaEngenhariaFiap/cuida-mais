@@ -5,7 +5,8 @@ const CHAVE = 'cuida-mais:preferencias';
 export const preferencias = $state({
 	fotoObrigatoriaMedicacao: true,
 	toleranciaPadraoMin: 30,
-	lembretePadraoMin: 15
+	lembretePadraoMin: 15,
+	tema: 'claro' as 'claro' | 'escuro' | 'auto'
 });
 
 export function carregarPreferencias(): void {

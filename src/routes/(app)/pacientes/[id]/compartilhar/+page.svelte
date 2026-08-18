@@ -45,7 +45,7 @@
 </svelte:head>
 
 <div class="mx-auto w-full max-w-lg p-4">
-	<h1 class="mb-1 text-2xl font-bold text-navy">Compartilhar com a família</h1>
+	<h1 class="mb-1 text-2xl font-bold text-marca">Compartilhar com a família</h1>
 	<p class="mb-4 text-sm text-ink/60">
 		O responsável acompanha o dia de {data.paciente.nome} por um link — somente leitura, sem conta
 		e sem login. Só o dia atual fica visível.

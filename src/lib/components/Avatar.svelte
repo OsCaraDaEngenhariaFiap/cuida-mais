@@ -13,7 +13,7 @@
 {:else}
 	<div
 		aria-hidden="true"
-		class="{classes[tamanho]} flex shrink-0 items-center justify-center rounded-full bg-navy-50 font-bold text-navy"
+		class="{classes[tamanho]} flex shrink-0 items-center justify-center rounded-full bg-navy-50 font-bold text-marca"
 	>
 		{nome.trim().slice(0, 1).toUpperCase()}
 	</div>

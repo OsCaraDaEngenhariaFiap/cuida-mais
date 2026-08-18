@@ -18,7 +18,7 @@
 
 <div class="mx-auto w-full max-w-lg p-4">
 	<header class="mb-4">
-		<h1 class="text-2xl font-bold text-navy">Olá, {data.cuidador.nome}</h1>
+		<h1 class="text-2xl font-bold text-marca">Olá, {data.cuidador.nome}</h1>
 		<p class="text-sm text-ink/60 first-letter:uppercase">{hoje}</p>
 	</header>
 
@@ -100,7 +100,7 @@
 				<ul class="flex flex-col overflow-hidden rounded-(--radius-card-lg) border border-ink/10">
 					{#each data.proximos as ocorrencia (ocorrencia.taskId + ocorrencia.horario)}
 						<li class="flex items-center gap-3 border-b border-ink/5 px-4 py-3 last:border-b-0">
-							<span class="w-12 shrink-0 font-mono text-sm font-bold text-navy">
+							<span class="w-12 shrink-0 font-mono text-sm font-bold text-marca">
 								{ocorrencia.horario}
 							</span>
 							<span aria-hidden="true">{TIPOS_CUIDADO[ocorrencia.tipo].icone}</span>
@@ -110,7 +110,7 @@
 							</div>
 							<a
 								href="/pacientes/{ocorrencia.patientId}/registrar?tarefa={ocorrencia.taskId}"
-								class="touch-target flex items-center rounded-(--radius-card) bg-navy-50 px-3 text-xs font-semibold text-navy"
+								class="touch-target flex items-center rounded-(--radius-card) bg-navy-50 px-3 text-xs font-semibold text-marca"
 							>
 								Registrar
 							</a>

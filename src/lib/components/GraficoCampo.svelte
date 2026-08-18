@@ -124,7 +124,7 @@
 								</span>
 							{:else}
 								<span
-									class="rounded px-2 py-0.5 text-xs font-medium {r.foraDoPadrao ? 'bg-critico/15 text-critico' : 'bg-navy-50 text-navy'}"
+									class="rounded px-2 py-0.5 text-xs font-medium {r.foraDoPadrao ? 'bg-critico/15 text-critico' : 'bg-navy-50 text-marca'}"
 								>
 									{r.valorTexto}
 								</span>

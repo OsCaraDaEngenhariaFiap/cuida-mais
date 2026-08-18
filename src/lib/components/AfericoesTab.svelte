@@ -51,7 +51,7 @@
 				onclick={() => (periodo = dias as 7 | 30)}
 				aria-pressed={periodo === dias}
 				class="touch-target rounded-(--radius-card) border px-4 text-sm font-semibold
-					{periodo === dias ? 'border-navy bg-navy text-white' : 'border-ink/15 text-ink/60'}"
+					{periodo === dias ? 'border-marca bg-navy text-white' : 'border-ink/15 text-ink/60'}"
 			>
 				{dias} dias
 			</button>

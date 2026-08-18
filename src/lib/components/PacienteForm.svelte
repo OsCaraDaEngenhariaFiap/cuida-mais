@@ -86,7 +86,7 @@
 			type="text"
 			required
 			bind:value={form.nome}
-			class="touch-target rounded-(--radius-card) border border-ink/20 px-4 text-base outline-navy"
+			class="touch-target rounded-(--radius-card) border border-ink/20 px-4 text-base outline-marca"
 		/>
 	</label>
 
@@ -96,7 +96,7 @@
 			type="date"
 			required
 			bind:value={form.dataNascimento}
-			class="touch-target rounded-(--radius-card) border border-ink/20 px-4 text-base outline-navy"
+			class="touch-target rounded-(--radius-card) border border-ink/20 px-4 text-base outline-marca"
 		/>
 	</label>
 
@@ -106,31 +106,31 @@
 			type="text"
 			placeholder="ex.: Quarto 102"
 			bind:value={form.localizacao}
-			class="touch-target rounded-(--radius-card) border border-ink/20 px-4 text-base outline-navy"
+			class="touch-target rounded-(--radius-card) border border-ink/20 px-4 text-base outline-marca"
 		/>
 	</label>
 
 	<fieldset class="rounded-(--radius-card-lg) border border-ink/10 p-3">
-		<legend class="px-1 text-sm font-semibold text-navy">Responsável / família</legend>
+		<legend class="px-1 text-sm font-semibold text-marca">Responsável / família</legend>
 		<div class="flex flex-col gap-3">
 			<input
 				type="text"
 				placeholder="Nome"
 				bind:value={form.respNome}
-				class="touch-target rounded-(--radius-card) border border-ink/20 px-4 text-base outline-navy"
+				class="touch-target rounded-(--radius-card) border border-ink/20 px-4 text-base outline-marca"
 			/>
 			<div class="grid grid-cols-2 gap-3">
 				<input
 					type="text"
 					placeholder="Parentesco"
 					bind:value={form.respParentesco}
-					class="touch-target rounded-(--radius-card) border border-ink/20 px-4 text-base outline-navy"
+					class="touch-target rounded-(--radius-card) border border-ink/20 px-4 text-base outline-marca"
 				/>
 				<input
 					type="tel"
 					placeholder="Telefone"
 					bind:value={form.respTelefone}
-					class="touch-target rounded-(--radius-card) border border-ink/20 px-4 text-base outline-navy"
+					class="touch-target rounded-(--radius-card) border border-ink/20 px-4 text-base outline-marca"
 				/>
 			</div>
 		</div>
@@ -144,7 +144,7 @@
 			type="text"
 			placeholder="ex.: Penicilina, Dipirona"
 			bind:value={form.alergias}
-			class="touch-target rounded-(--radius-card) border border-ink/20 px-4 text-base outline-navy"
+			class="touch-target rounded-(--radius-card) border border-ink/20 px-4 text-base outline-marca"
 		/>
 	</label>
 
@@ -156,7 +156,7 @@
 			type="text"
 			placeholder="ex.: Alzheimer, Diabetes tipo 2"
 			bind:value={form.condicoes}
-			class="touch-target rounded-(--radius-card) border border-ink/20 px-4 text-base outline-navy"
+			class="touch-target rounded-(--radius-card) border border-ink/20 px-4 text-base outline-marca"
 		/>
 	</label>
 
@@ -165,7 +165,7 @@
 		<textarea
 			rows="3"
 			bind:value={form.observacoes}
-			class="rounded-(--radius-card) border border-ink/20 p-4 text-base outline-navy"
+			class="rounded-(--radius-card) border border-ink/20 p-4 text-base outline-marca"
 		></textarea>
 	</label>
 

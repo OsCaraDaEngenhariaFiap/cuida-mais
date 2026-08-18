@@ -10,6 +10,6 @@
 </svelte:head>
 
 <div class="mx-auto w-full max-w-lg p-4">
-	<h1 class="mb-4 text-2xl font-bold text-navy">Novo paciente</h1>
+	<h1 class="mb-4 text-2xl font-bold text-marca">Novo paciente</h1>
 	<PacienteForm caregiverId={data.cuidador.id} />
 </div>

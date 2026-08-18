@@ -18,7 +18,7 @@
 </svelte:head>
 
 <div class="mx-auto w-full max-w-lg p-4">
-	<h1 class="mb-4 text-2xl font-bold text-navy">Editar paciente</h1>
+	<h1 class="mb-4 text-2xl font-bold text-marca">Editar paciente</h1>
 	<PacienteForm caregiverId={data.paciente.caregiverId} inicial={data.paciente} />
 
 	<button

@@ -131,7 +131,7 @@
 				type="text"
 				bind:value={form.icone}
 				maxlength="4"
-				class="touch-target rounded-(--radius-card) border border-ink/20 text-center text-xl outline-navy"
+				class="touch-target rounded-(--radius-card) border border-ink/20 text-center text-xl outline-marca"
 			/>
 		</label>
 		<label class="flex flex-col gap-1">
@@ -141,7 +141,7 @@
 				required
 				placeholder="ex.: Diurese (mL)"
 				bind:value={form.nome}
-				class="touch-target rounded-(--radius-card) border border-ink/20 px-4 text-base outline-navy"
+				class="touch-target rounded-(--radius-card) border border-ink/20 px-4 text-base outline-marca"
 			/>
 		</label>
 	</div>
@@ -155,12 +155,12 @@
 			type="number"
 			min="1"
 			bind:value={form.alertaSemRegistroHoras}
-			class="touch-target rounded-(--radius-card) border border-ink/20 px-4 text-base outline-navy"
+			class="touch-target rounded-(--radius-card) border border-ink/20 px-4 text-base outline-marca"
 		/>
 	</label>
 
 	<section class="flex flex-col gap-3">
-		<h3 class="text-sm font-semibold text-navy">Campos</h3>
+		<h3 class="text-sm font-semibold text-marca">Campos</h3>
 		{#each form.campos as linha, i (i)}
 			<fieldset class="flex flex-col gap-2 rounded-(--radius-card-lg) border border-ink/10 p-3">
 				<div class="flex items-center justify-between">
@@ -183,11 +183,11 @@
 						placeholder="Rótulo *"
 						required
 						bind:value={linha.rotulo}
-						class="touch-target rounded-(--radius-card) border border-ink/20 px-3 text-base outline-navy"
+						class="touch-target rounded-(--radius-card) border border-ink/20 px-3 text-base outline-marca"
 					/>
 					<select
 						bind:value={linha.formato}
-						class="touch-target rounded-(--radius-card) border border-ink/20 px-3 text-base outline-navy"
+						class="touch-target rounded-(--radius-card) border border-ink/20 px-3 text-base outline-marca"
 					>
 						<option value="numero">Número</option>
 						<option value="escala">Escala</option>
@@ -203,7 +203,7 @@
 							type="text"
 							placeholder="Unidade (bpm, mL…)"
 							bind:value={linha.unidade}
-							class="touch-target rounded-(--radius-card) border border-ink/20 px-3 text-base outline-navy"
+							class="touch-target rounded-(--radius-card) border border-ink/20 px-3 text-base outline-marca"
 						/>
 						<input
 							type="number"
@@ -211,7 +211,7 @@
 							max="3"
 							placeholder="Casas decimais"
 							bind:value={linha.casasDecimais}
-							class="touch-target rounded-(--radius-card) border border-ink/20 px-3 text-base outline-navy"
+							class="touch-target rounded-(--radius-card) border border-ink/20 px-3 text-base outline-marca"
 						/>
 					</div>
 				{:else if linha.formato === 'escala'}
@@ -220,13 +220,13 @@
 							type="number"
 							placeholder="Mínimo"
 							bind:value={linha.escalaMin}
-							class="touch-target rounded-(--radius-card) border border-ink/20 px-3 text-base outline-navy"
+							class="touch-target rounded-(--radius-card) border border-ink/20 px-3 text-base outline-marca"
 						/>
 						<input
 							type="number"
 							placeholder="Máximo"
 							bind:value={linha.escalaMax}
-							class="touch-target rounded-(--radius-card) border border-ink/20 px-3 text-base outline-navy"
+							class="touch-target rounded-(--radius-card) border border-ink/20 px-3 text-base outline-marca"
 						/>
 					</div>
 				{:else if linha.formato === 'opcoes'}
@@ -234,7 +234,7 @@
 						type="text"
 						placeholder="Opções separadas por vírgula"
 						bind:value={linha.opcoes}
-						class="touch-target rounded-(--radius-card) border border-ink/20 px-3 text-base outline-navy"
+						class="touch-target rounded-(--radius-card) border border-ink/20 px-3 text-base outline-marca"
 					/>
 					<label class="flex flex-col gap-1 text-sm">
 						<span class="text-ink/60">Valor esperado (alerta se diferente)</span>
@@ -242,7 +242,7 @@
 							type="text"
 							placeholder="deixe vazio para não alertar"
 							bind:value={linha.valorEsperado}
-							class="touch-target rounded-(--radius-card) border border-ink/20 px-3 text-base outline-navy"
+							class="touch-target rounded-(--radius-card) border border-ink/20 px-3 text-base outline-marca"
 						/>
 					</label>
 				{:else if linha.formato === 'booleano'}
@@ -250,7 +250,7 @@
 						<span class="text-ink/60">Valor esperado (alerta se diferente)</span>
 						<select
 							bind:value={linha.valorEsperado}
-							class="touch-target rounded-(--radius-card) border border-ink/20 px-3 text-base outline-navy"
+							class="touch-target rounded-(--radius-card) border border-ink/20 px-3 text-base outline-marca"
 						>
 							<option value="">Sem valor esperado</option>
 							<option value="sim">Sim</option>
@@ -261,25 +261,25 @@
 
 				{#if linha.formato === 'numero' || linha.formato === 'escala'}
 					<details class="text-sm">
-						<summary class="cursor-pointer py-2 font-medium text-navy">Faixa normal e desvio (alertas)</summary>
+						<summary class="cursor-pointer py-2 font-medium text-marca">Faixa normal e desvio (alertas)</summary>
 						<div class="mt-2 grid grid-cols-2 gap-2">
 							<input
 								type="number"
 								step="any"
 								placeholder="Faixa: mín."
 								bind:value={linha.faixaMin}
-								class="touch-target rounded-(--radius-card) border border-ink/20 px-3 text-base outline-navy"
+								class="touch-target rounded-(--radius-card) border border-ink/20 px-3 text-base outline-marca"
 							/>
 							<input
 								type="number"
 								step="any"
 								placeholder="Faixa: máx."
 								bind:value={linha.faixaMax}
-								class="touch-target rounded-(--radius-card) border border-ink/20 px-3 text-base outline-navy"
+								class="touch-target rounded-(--radius-card) border border-ink/20 px-3 text-base outline-marca"
 							/>
 							<select
 								bind:value={linha.faixaSeveridade}
-								class="touch-target rounded-(--radius-card) border border-ink/20 px-3 text-base outline-navy"
+								class="touch-target rounded-(--radius-card) border border-ink/20 px-3 text-base outline-marca"
 							>
 								<option value="atencao">Fora da faixa → atenção</option>
 								<option value="critico">Fora da faixa → crítico</option>
@@ -289,7 +289,7 @@
 								step="any"
 								placeholder="Piso de desvio (opcional)"
 								bind:value={linha.pisoDesvio}
-								class="touch-target rounded-(--radius-card) border border-ink/20 px-3 text-base outline-navy"
+								class="touch-target rounded-(--radius-card) border border-ink/20 px-3 text-base outline-marca"
 							/>
 						</div>
 					</details>
@@ -299,7 +299,7 @@
 		<button
 			type="button"
 			onclick={() => form.campos.push(paraLinha())}
-			class="touch-target rounded-(--radius-card) border border-dashed border-navy/40 text-sm font-medium text-navy"
+			class="touch-target rounded-(--radius-card) border border-dashed border-marca/40 text-sm font-medium text-marca"
 		>
 			+ Adicionar campo
 		</button>

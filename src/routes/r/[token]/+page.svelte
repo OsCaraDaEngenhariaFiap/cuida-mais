@@ -23,7 +23,7 @@
 {#if !data.valido}
 	<main class="mx-auto flex min-h-dvh w-full max-w-md flex-col items-center justify-center gap-3 p-6 text-center">
 		<p class="text-4xl" aria-hidden="true">🔒</p>
-		<h1 class="text-xl font-bold text-navy">Link indisponível</h1>
+		<h1 class="text-xl font-bold text-marca">Link indisponível</h1>
 		<p class="text-sm text-ink/60">
 			Este link não está mais ativo. Peça um novo endereço para quem cuida.
 		</p>
@@ -54,7 +54,7 @@
 				<p class="text-[11px] text-ink/60">atrasados</p>
 			</div>
 			<div class="rounded-(--radius-card-lg) border border-ink/10 p-2">
-				<p class="text-xl font-bold text-navy">{data.eventos.length}</p>
+				<p class="text-xl font-bold text-marca">{data.eventos.length}</p>
 				<p class="text-[11px] text-ink/60">registros</p>
 			</div>
 		</section>
@@ -68,7 +68,7 @@
 				<ol class="relative flex flex-col gap-4 pl-2">
 					{#each data.eventos as evento (evento.id)}
 						<li class="flex gap-3">
-							<span class="w-11 shrink-0 pt-1.5 text-right font-mono text-sm font-bold text-navy">
+							<span class="w-11 shrink-0 pt-1.5 text-right font-mono text-sm font-bold text-marca">
 								{format(parseISO(evento.ocorridoEm), 'HH:mm')}
 							</span>
 							<div class="relative flex flex-col items-center">

@@ -2,6 +2,8 @@
 	import { formatISO, parseISO } from 'date-fns';
 	import type { CareTask, MeasurementType, TipoCuidado } from '$lib/domain/types';
 	import { services } from '$lib/services';
+	import { agendarNotificacoes } from '$lib/services/notificacoes';
+	import { preferencias } from '$lib/stores/preferencias.svelte';
 	import { DIAS_SEMANA, TIPOS_CUIDADO, VIAS_MEDICACAO } from '$lib/ui/tipos-cuidado';
 
 	let {
@@ -24,8 +26,8 @@
 		descricao: inicial?.descricao ?? '',
 		horarios: inicial?.horarios.slice() ?? ['08:00'],
 		diasSemana: inicial?.diasSemana.slice() ?? [0, 1, 2, 3, 4, 5, 6],
-		toleranciaMin: inicial?.toleranciaMin ?? 30,
-		lembreteAntesMin: inicial?.lembreteAntesMin ?? 15,
+		toleranciaMin: inicial?.toleranciaMin ?? preferencias.toleranciaPadraoMin,
+		lembreteAntesMin: inicial?.lembreteAntesMin ?? preferencias.lembretePadraoMin,
 		measurementTypeIds: inicial?.measurementTypeIds?.slice() ?? [],
 		dose: inicial?.medicacao?.dose ?? '',
 		via: inicial?.medicacao?.via ?? 'oral',
@@ -112,6 +114,7 @@
 			};
 			if (inicial) await services.tasks.atualizar(inicial.id, dados);
 			else await services.tasks.criar(dados);
+			await agendarNotificacoes(); // horários mudaram — reagenda sem esperar o tick
 			aoFechar(true);
 		} catch (falha) {
 			erro = falha instanceof Error ? falha.message : 'Não foi possível salvar';
@@ -127,7 +130,7 @@
 				type="button"
 				onclick={() => (form.tipo = valor as TipoCuidado)}
 				class="touch-target flex flex-col items-center justify-center gap-0.5 rounded-(--radius-card) border text-xs font-medium
-					{form.tipo === valor ? 'border-navy bg-navy text-white' : 'border-ink/15 text-ink/70'}"
+					{form.tipo === valor ? 'border-marca bg-navy text-white' : 'border-ink/15 text-ink/70'}"
 			>
 				<span class="text-lg">{meta.icone}</span>
 				{meta.rotulo}
@@ -142,7 +145,7 @@
 			required
 			placeholder={form.tipo === 'medicacao' ? 'ex.: Losartana 50mg' : 'ex.: Café da manhã'}
 			bind:value={form.titulo}
-			class="touch-target rounded-(--radius-card) border border-ink/20 px-4 text-base outline-navy"
+			class="touch-target rounded-(--radius-card) border border-ink/20 px-4 text-base outline-marca"
 		/>
 	</label>
 
@@ -155,7 +158,7 @@
 						type="time"
 						required
 						bind:value={form.horarios[i]}
-						class="touch-target flex-1 rounded-(--radius-card) border border-ink/20 px-4 text-base outline-navy"
+						class="touch-target flex-1 rounded-(--radius-card) border border-ink/20 px-4 text-base outline-marca"
 					/>
 					{#if form.horarios.length > 1}
 						<button
@@ -172,7 +175,7 @@
 			<button
 				type="button"
 				onclick={() => form.horarios.push('12:00')}
-				class="touch-target rounded-(--radius-card) border border-dashed border-navy/40 text-sm font-medium text-navy"
+				class="touch-target rounded-(--radius-card) border border-dashed border-marca/40 text-sm font-medium text-marca"
 			>
 				+ horário
 			</button>
@@ -188,7 +191,7 @@
 					onclick={() => alternarDia(dia)}
 					aria-pressed={form.diasSemana.includes(dia)}
 					class="touch-target rounded-(--radius-card) border text-xs font-semibold
-						{form.diasSemana.includes(dia) ? 'border-navy bg-navy text-white' : 'border-ink/15 text-ink/50'}"
+						{form.diasSemana.includes(dia) ? 'border-marca bg-navy text-white' : 'border-ink/15 text-ink/50'}"
 				>
 					{rotulo}
 				</button>
@@ -203,7 +206,7 @@
 				type="number"
 				min="0"
 				bind:value={form.toleranciaMin}
-				class="touch-target rounded-(--radius-card) border border-ink/20 px-4 text-base outline-navy"
+				class="touch-target rounded-(--radius-card) border border-ink/20 px-4 text-base outline-marca"
 			/>
 		</label>
 		<label class="flex flex-col gap-1">
@@ -212,14 +215,14 @@
 				type="number"
 				min="0"
 				bind:value={form.lembreteAntesMin}
-				class="touch-target rounded-(--radius-card) border border-ink/20 px-4 text-base outline-navy"
+				class="touch-target rounded-(--radius-card) border border-ink/20 px-4 text-base outline-marca"
 			/>
 		</label>
 	</div>
 
 	{#if form.tipo === 'medicao'}
 		<fieldset class="rounded-(--radius-card-lg) border border-ink/10 p-3">
-			<legend class="px-1 text-sm font-semibold text-navy">O que aferir *</legend>
+			<legend class="px-1 text-sm font-semibold text-marca">O que aferir *</legend>
 			<div class="flex flex-wrap gap-2">
 				{#each tipos as tipo (tipo.id)}
 					<button
@@ -227,7 +230,7 @@
 						onclick={() => alternarTipoAfericao(tipo.id)}
 						aria-pressed={form.measurementTypeIds.includes(tipo.id)}
 						class="touch-target rounded-full border px-3 text-sm
-							{form.measurementTypeIds.includes(tipo.id) ? 'border-navy bg-navy text-white' : 'border-ink/20 text-ink/70'}"
+							{form.measurementTypeIds.includes(tipo.id) ? 'border-marca bg-navy text-white' : 'border-ink/20 text-ink/70'}"
 					>
 						{tipo.icone} {tipo.nome}
 					</button>
@@ -238,7 +241,7 @@
 
 	{#if form.tipo === 'medicacao'}
 		<fieldset class="flex flex-col gap-3 rounded-(--radius-card-lg) border border-ink/10 p-3">
-			<legend class="px-1 text-sm font-semibold text-navy">Medicação</legend>
+			<legend class="px-1 text-sm font-semibold text-marca">Medicação</legend>
 			<div class="grid grid-cols-2 gap-3">
 				<label class="flex flex-col gap-1">
 					<span class="text-sm font-medium text-ink/80">Dose *</span>
@@ -246,14 +249,14 @@
 						type="text"
 						placeholder="50 mg, 10 gotas…"
 						bind:value={form.dose}
-						class="touch-target rounded-(--radius-card) border border-ink/20 px-4 text-base outline-navy"
+						class="touch-target rounded-(--radius-card) border border-ink/20 px-4 text-base outline-marca"
 					/>
 				</label>
 				<label class="flex flex-col gap-1">
 					<span class="text-sm font-medium text-ink/80">Via</span>
 					<select
 						bind:value={form.via}
-						class="touch-target rounded-(--radius-card) border border-ink/20 px-4 text-base outline-navy"
+						class="touch-target rounded-(--radius-card) border border-ink/20 px-4 text-base outline-marca"
 					>
 						{#each VIAS_MEDICACAO as via (via)}
 							<option value={via}>{via}</option>
@@ -266,7 +269,7 @@
 						type="date"
 						required
 						bind:value={form.inicioTratamento}
-						class="touch-target rounded-(--radius-card) border border-ink/20 px-4 text-base outline-navy"
+						class="touch-target rounded-(--radius-card) border border-ink/20 px-4 text-base outline-marca"
 					/>
 				</label>
 				<label class="flex flex-col gap-1">
@@ -274,13 +277,13 @@
 					<input
 						type="date"
 						bind:value={form.fimTratamento}
-						class="touch-target rounded-(--radius-card) border border-ink/20 px-4 text-base outline-navy"
+						class="touch-target rounded-(--radius-card) border border-ink/20 px-4 text-base outline-marca"
 					/>
 				</label>
 			</div>
 
 			<label class="flex items-center gap-2 text-sm font-medium text-ink/80">
-				<input type="checkbox" bind:checked={form.comEstoque} class="size-5 accent-navy" />
+				<input type="checkbox" bind:checked={form.comEstoque} class="size-5 accent-marca" />
 				Controlar estoque da caixa
 			</label>
 			{#if form.comEstoque}
@@ -292,7 +295,7 @@
 							min="0"
 							step="any"
 							bind:value={form.quantidadeAtual}
-							class="touch-target rounded-(--radius-card) border border-ink/20 px-4 text-base outline-navy"
+							class="touch-target rounded-(--radius-card) border border-ink/20 px-4 text-base outline-marca"
 						/>
 					</label>
 					<label class="flex flex-col gap-1">
@@ -300,7 +303,7 @@
 						<input
 							type="text"
 							bind:value={form.unidade}
-							class="touch-target rounded-(--radius-card) border border-ink/20 px-4 text-base outline-navy"
+							class="touch-target rounded-(--radius-card) border border-ink/20 px-4 text-base outline-marca"
 						/>
 					</label>
 					<label class="flex flex-col gap-1">
@@ -310,7 +313,7 @@
 							min="0"
 							step="any"
 							bind:value={form.consumoPorDose}
-							class="touch-target rounded-(--radius-card) border border-ink/20 px-4 text-base outline-navy"
+							class="touch-target rounded-(--radius-card) border border-ink/20 px-4 text-base outline-marca"
 						/>
 					</label>
 					<label class="flex flex-col gap-1">
@@ -320,7 +323,7 @@
 							min="0"
 							step="any"
 							bind:value={form.alertarAbaixoDe}
-							class="touch-target rounded-(--radius-card) border border-ink/20 px-4 text-base outline-navy"
+							class="touch-target rounded-(--radius-card) border border-ink/20 px-4 text-base outline-marca"
 						/>
 					</label>
 				</div>

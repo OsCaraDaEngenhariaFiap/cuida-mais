@@ -19,7 +19,7 @@
 
 <div class="mx-auto w-full max-w-lg p-4">
 	<header class="mb-4 flex items-center justify-between gap-3">
-		<h1 class="text-2xl font-bold text-navy">Pacientes</h1>
+		<h1 class="text-2xl font-bold text-marca">Pacientes</h1>
 		<a
 			href="/pacientes/novo"
 			class="touch-target flex items-center rounded-(--radius-card) bg-navy px-4 text-sm font-semibold text-white"
@@ -33,7 +33,7 @@
 			type="search"
 			placeholder="Buscar por nome ou local…"
 			bind:value={busca}
-			class="touch-target mb-4 w-full rounded-(--radius-card) border border-ink/20 px-4 text-base outline-navy"
+			class="touch-target mb-4 w-full rounded-(--radius-card) border border-ink/20 px-4 text-base outline-marca"
 		/>
 	{/if}
 

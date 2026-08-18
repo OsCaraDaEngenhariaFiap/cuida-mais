@@ -36,7 +36,7 @@
 </svelte:head>
 
 <div class="mx-auto w-full max-w-lg p-4">
-	<h1 class="mb-4 text-2xl font-bold text-navy">Alertas</h1>
+	<h1 class="mb-4 text-2xl font-bold text-marca">Alertas</h1>
 
 	{#if data.alertas.length === 0}
 		<div class="rounded-(--radius-card-lg) border border-dashed border-ink/20 p-8 text-center">
@@ -124,8 +124,8 @@
 
 {#if reporCaixa}
 	<div class="fixed inset-0 z-50 flex items-end justify-center bg-navy/40 p-4" role="dialog" aria-modal="true">
-		<div class="w-full max-w-md rounded-(--radius-card-lg) bg-white p-4 shadow-xl">
-			<h3 class="mb-1 text-lg font-bold text-navy">Repor caixa</h3>
+		<div class="w-full max-w-md rounded-(--radius-card-lg) bg-superficie p-4 shadow-xl">
+			<h3 class="mb-1 text-lg font-bold text-marca">Repor caixa</h3>
 			<p class="mb-3 text-sm text-ink/60">{reporCaixa.detalhe}</p>
 			<label class="flex flex-col gap-1">
 				<span class="text-sm font-medium text-ink/80">Nova quantidade na caixa</span>
@@ -134,7 +134,7 @@
 					min="0"
 					step="any"
 					bind:value={novaQuantidade}
-					class="touch-target rounded-(--radius-card) border border-ink/20 px-4 text-base outline-navy"
+					class="touch-target rounded-(--radius-card) border border-ink/20 px-4 text-base outline-marca"
 				/>
 			</label>
 			<div class="mt-4 grid grid-cols-2 gap-3">

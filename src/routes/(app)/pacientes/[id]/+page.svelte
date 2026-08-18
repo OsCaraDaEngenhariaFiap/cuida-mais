@@ -57,19 +57,19 @@
 			href="/relatorio/{data.paciente.id}"
 			aria-label="Relatório do dia"
 			title="Relatório do dia"
-			class="touch-target flex items-center justify-center rounded-(--radius-card) bg-white/10 px-3 text-xl"
+			class="touch-target flex items-center justify-center rounded-(--radius-card) bg-superficie/10 px-3 text-xl"
 		>
 			📄
 		</a>
 	</header>
 
-	<nav class="sticky top-0 z-10 flex overflow-x-auto border-b border-ink/10 bg-white" aria-label="Seções do paciente">
+	<nav class="sticky top-0 z-10 flex overflow-x-auto border-b border-ink/10 bg-superficie" aria-label="Seções do paciente">
 		{#each abas as { id, rotulo } (id)}
 			<button
 				onclick={() => (aba = id)}
 				aria-current={aba === id}
 				class="touch-target shrink-0 border-b-2 px-4 text-sm font-medium whitespace-nowrap transition-colors
-					{aba === id ? 'border-navy text-navy' : 'border-transparent text-ink/50'}"
+					{aba === id ? 'border-marca text-marca' : 'border-transparent text-ink/50'}"
 			>
 				{rotulo}
 			</button>
@@ -81,7 +81,7 @@
 			<Timeline patientId={data.paciente.id} nomeCuidador={data.cuidador.nome} />
 		{:else if aba === 'rotinas'}
 			{#if editandoTarefa}
-				<h2 class="mb-3 text-lg font-bold text-navy">
+				<h2 class="mb-3 text-lg font-bold text-marca">
 					{editandoTarefa === 'nova' ? 'Nova rotina' : 'Editar rotina'}
 				</h2>
 				<TarefaForm
@@ -185,7 +185,7 @@
 						<dt class="mb-1 text-xs font-semibold uppercase tracking-wide text-ink/50">Condições</dt>
 						<dd class="flex flex-wrap gap-1">
 							{#each data.paciente.condicoes as condicao (condicao)}
-								<span class="rounded-full bg-navy-50 px-3 py-1 text-sm font-medium text-navy">{condicao}</span>
+								<span class="rounded-full bg-navy-50 px-3 py-1 text-sm font-medium text-marca">{condicao}</span>
 							{/each}
 						</dd>
 					</div>
@@ -198,7 +198,7 @@
 				{/if}
 				<a
 					href="/pacientes/{data.paciente.id}/editar"
-					class="touch-target mt-2 flex items-center justify-center rounded-(--radius-card) border border-navy text-sm font-semibold text-navy"
+					class="touch-target mt-2 flex items-center justify-center rounded-(--radius-card) border border-marca text-sm font-semibold text-marca"
 				>
 					Editar perfil
 				</a>

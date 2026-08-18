@@ -17,14 +17,14 @@
 			inputmode="decimal"
 			step={10 ** -(campo.casasDecimais ?? 0)}
 			bind:value={valor}
-			class="touch-target rounded-(--radius-card) border border-ink/20 px-4 text-base outline-navy"
+			class="touch-target rounded-(--radius-card) border border-ink/20 px-4 text-base outline-marca"
 		/>
 	{:else if campo.formato === 'escala'}
 		{@const min = campo.escala?.min ?? 0}
 		{@const max = campo.escala?.max ?? 10}
 		<div class="flex items-center gap-3">
-			<input type="range" {min} {max} step="1" bind:value={valor} class="h-12 flex-1 accent-navy" />
-			<output class="w-10 text-center text-xl font-bold text-navy">
+			<input type="range" {min} {max} step="1" bind:value={valor} class="h-12 flex-1 accent-marca" />
+			<output class="w-10 text-center text-xl font-bold text-marca">
 				{typeof valor === 'number' ? valor : '–'}
 			</output>
 		</div>
@@ -34,7 +34,7 @@
 				type="button"
 				onclick={() => (valor = true)}
 				class="touch-target rounded-(--radius-card) border text-sm font-semibold
-					{valor === true ? 'border-navy bg-navy text-white' : 'border-ink/20 text-ink/70'}"
+					{valor === true ? 'border-marca bg-navy text-white' : 'border-ink/20 text-ink/70'}"
 			>
 				Sim
 			</button>
@@ -42,7 +42,7 @@
 				type="button"
 				onclick={() => (valor = false)}
 				class="touch-target rounded-(--radius-card) border text-sm font-semibold
-					{valor === false ? 'border-navy bg-navy text-white' : 'border-ink/20 text-ink/70'}"
+					{valor === false ? 'border-marca bg-navy text-white' : 'border-ink/20 text-ink/70'}"
 			>
 				Não
 			</button>
@@ -50,7 +50,7 @@
 	{:else if campo.formato === 'opcoes'}
 		<select
 			bind:value={valor}
-			class="touch-target rounded-(--radius-card) border border-ink/20 px-4 text-base outline-navy"
+			class="touch-target rounded-(--radius-card) border border-ink/20 px-4 text-base outline-marca"
 		>
 			<option value={undefined} disabled selected>Escolha…</option>
 			{#each campo.opcoes ?? [] as opcao (opcao)}
@@ -61,7 +61,7 @@
 		<textarea
 			rows="2"
 			bind:value={valor}
-			class="rounded-(--radius-card) border border-ink/20 p-4 text-base outline-navy"
+			class="rounded-(--radius-card) border border-ink/20 p-4 text-base outline-marca"
 		></textarea>
 	{/if}
 </div>

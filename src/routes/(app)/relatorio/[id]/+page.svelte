@@ -45,7 +45,7 @@
 
 <div class="mx-auto w-full max-w-lg p-4">
 	<header class="mb-4">
-		<h1 class="text-2xl font-bold text-navy">Relatório do dia</h1>
+		<h1 class="text-2xl font-bold text-marca">Relatório do dia</h1>
 		<p class="text-sm text-ink/60">
 			{data.paciente.nome} · <span class="first-letter:uppercase">{hoje}</span>
 		</p>
@@ -78,7 +78,7 @@
 		<ol class="mb-6 flex flex-col overflow-hidden rounded-(--radius-card-lg) border border-ink/10">
 			{#each data.eventos as evento (evento.id)}
 				<li class="flex items-center gap-3 border-b border-ink/5 px-4 py-2.5 last:border-b-0">
-					<span class="w-12 shrink-0 font-mono text-sm font-bold text-navy">
+					<span class="w-12 shrink-0 font-mono text-sm font-bold text-marca">
 						{format(parseISO(evento.ocorridoEm), 'HH:mm')}
 					</span>
 					<span aria-hidden="true">{TIPOS_CUIDADO[evento.tipo].icone}</span>

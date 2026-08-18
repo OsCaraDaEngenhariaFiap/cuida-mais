@@ -29,13 +29,13 @@
 
 <div class="mx-auto w-full max-w-lg p-4">
 	{#if editando}
-		<h1 class="mb-4 text-2xl font-bold text-navy">
+		<h1 class="mb-4 text-2xl font-bold text-marca">
 			{editando === 'novo' ? 'Nova aferição' : `Editar ${editando.nome}`}
 		</h1>
 		<TipoAfericaoForm inicial={editando === 'novo' ? undefined : editando} aoFechar={fechar} />
 	{:else}
 		<header class="mb-4 flex items-center justify-between gap-3">
-			<h1 class="text-2xl font-bold text-navy">Aferições</h1>
+			<h1 class="text-2xl font-bold text-marca">Aferições</h1>
 			<button
 				onclick={() => (editando = 'novo')}
 				class="touch-target flex items-center rounded-(--radius-card) bg-navy px-4 text-sm font-semibold text-white"
@@ -57,7 +57,7 @@
 						<p class="font-semibold">
 							{tipo.nome}
 							{#if tipo.sistema}
-								<span class="ml-1 rounded-full bg-navy-50 px-2 py-0.5 text-xs font-medium text-navy">padrão</span>
+								<span class="ml-1 rounded-full bg-navy-50 px-2 py-0.5 text-xs font-medium text-marca">padrão</span>
 							{/if}
 						</p>
 						<p class="truncate text-sm text-ink/60">{resumoCampos(tipo)}</p>

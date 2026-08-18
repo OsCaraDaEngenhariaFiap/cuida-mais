@@ -58,7 +58,7 @@
 		<button
 			onclick={() => (dia = addDays(dia, -1))}
 			aria-label="Dia anterior"
-			class="touch-target rounded-(--radius-card) border border-ink/15 px-4 font-bold text-navy"
+			class="touch-target rounded-(--radius-card) border border-ink/15 px-4 font-bold text-marca"
 		>
 			‹
 		</button>
@@ -75,7 +75,7 @@
 		<button
 			onclick={() => (dia = addDays(dia, 1))}
 			aria-label="Próximo dia"
-			class="touch-target rounded-(--radius-card) border border-ink/15 px-4 font-bold text-navy"
+			class="touch-target rounded-(--radius-card) border border-ink/15 px-4 font-bold text-marca"
 		>
 			›
 		</button>
@@ -100,7 +100,7 @@
 			{#each eventos as evento (evento.id)}
 				<li class="flex gap-3">
 					<div class="flex w-11 shrink-0 flex-col items-end pt-2">
-						<span class="font-mono text-sm font-bold text-navy">{hora(evento.ocorridoEm)}</span>
+						<span class="font-mono text-sm font-bold text-marca">{hora(evento.ocorridoEm)}</span>
 					</div>
 					<div class="relative flex flex-col items-center">
 						<span
@@ -179,19 +179,19 @@
 
 {#if editando || pulando}
 	<div class="fixed inset-0 z-50 flex items-end justify-center bg-navy/40 p-4" role="dialog" aria-modal="true">
-		<div class="w-full max-w-md rounded-(--radius-card-lg) bg-white p-4 shadow-xl">
+		<div class="w-full max-w-md rounded-(--radius-card-lg) bg-superficie p-4 shadow-xl">
 			{#if editando}
-				<h3 class="mb-3 text-lg font-bold text-navy">Corrigir registro</h3>
+				<h3 class="mb-3 text-lg font-bold text-marca">Corrigir registro</h3>
 				<label class="mb-3 flex flex-col gap-1">
 					<span class="text-sm font-medium text-ink/80">Observação</span>
 					<textarea
 						rows="2"
 						bind:value={novaObservacao}
-						class="rounded-(--radius-card) border border-ink/20 p-3 text-base outline-navy"
+						class="rounded-(--radius-card) border border-ink/20 p-3 text-base outline-marca"
 					></textarea>
 				</label>
 			{:else}
-				<h3 class="mb-3 text-lg font-bold text-navy">Marcar como pulado</h3>
+				<h3 class="mb-3 text-lg font-bold text-marca">Marcar como pulado</h3>
 				<p class="mb-3 text-sm text-ink/60">
 					O registro não é apagado — fica na linha do tempo como pulado.
 				</p>
@@ -201,7 +201,7 @@
 				<textarea
 					rows="2"
 					bind:value={motivo}
-					class="rounded-(--radius-card) border border-ink/20 p-3 text-base outline-navy"
+					class="rounded-(--radius-card) border border-ink/20 p-3 text-base outline-marca"
 				></textarea>
 			</label>
 			<div class="mt-4 grid grid-cols-2 gap-3">

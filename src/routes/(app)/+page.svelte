@@ -33,6 +33,47 @@
 			</a>
 		</div>
 	{:else}
+		<section class="mb-6 grid grid-cols-3 gap-3">
+			<div class="rounded-(--radius-card-lg) border border-ink/10 p-3 text-center" data-contador="pendencias">
+				<p class="text-2xl font-bold {data.pendencias > 0 ? 'text-atencao' : 'text-realizado'}">
+					{data.pendencias}
+				</p>
+				<p class="text-xs text-ink/60">pendências</p>
+			</div>
+			<a href="/alertas" class="rounded-(--radius-card-lg) border border-ink/10 p-3 text-center" data-contador="criticos">
+				<p class="text-2xl font-bold {data.criticos.length > 0 ? 'text-critico' : 'text-realizado'}">
+					{data.criticos.length}
+				</p>
+				<p class="text-xs text-ink/60">críticos</p>
+			</a>
+			<div class="rounded-(--radius-card-lg) border border-ink/10 p-3 text-center" data-contador="realizados">
+				<p class="text-2xl font-bold text-realizado">{data.realizadosHoje}</p>
+				<p class="text-xs text-ink/60">registros hoje</p>
+			</div>
+		</section>
+
+		{#if data.criticos.length > 0}
+			<section class="mb-6">
+				<h2 class="mb-2 text-sm font-bold uppercase tracking-wide text-critico">Alertas críticos</h2>
+				<ul class="flex flex-col gap-2">
+					{#each data.criticos.slice(0, 3) as alerta (alerta.id)}
+						<li>
+							<a
+								href="/alertas"
+								class="block rounded-(--radius-card-lg) border-l-4 border-critico bg-critico/5 p-3"
+							>
+								<p class="text-sm font-bold text-critico">{alerta.titulo}</p>
+								<p class="text-sm text-ink/80">{alerta.detalhe}</p>
+								<p class="mt-0.5 text-xs text-ink/50">
+									{data.nomesPacientes.get(alerta.patientId) ?? ''}
+								</p>
+							</a>
+						</li>
+					{/each}
+				</ul>
+			</section>
+		{/if}
+
 		<section class="mb-6">
 			<h2 class="mb-2 text-sm font-semibold uppercase tracking-wide text-ink/50">Seus pacientes</h2>
 			<div class="flex gap-3 overflow-x-auto pb-1">

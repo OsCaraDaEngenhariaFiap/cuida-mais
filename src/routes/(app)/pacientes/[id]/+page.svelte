@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { invalidateAll } from '$app/navigation';
+	import AfericoesTab from '$lib/components/AfericoesTab.svelte';
 	import Avatar from '$lib/components/Avatar.svelte';
 	import TarefaForm from '$lib/components/TarefaForm.svelte';
 	import Timeline from '$lib/components/Timeline.svelte';
@@ -43,7 +44,7 @@
 <div class="mx-auto w-full max-w-lg">
 	<header class="flex items-center gap-4 bg-navy p-4 text-white">
 		<Avatar nome={data.paciente.nome} fotoUrl={data.paciente.fotoUrl} tamanho="lg" />
-		<div class="min-w-0">
+		<div class="min-w-0 flex-1">
 			<h1 class="truncate text-xl font-bold">{data.paciente.nome}</h1>
 			<p class="text-sm text-white/70">
 				{calcularIdade(data.paciente.dataNascimento)} anos
@@ -52,6 +53,14 @@
 				{/if}
 			</p>
 		</div>
+		<a
+			href="/relatorio/{data.paciente.id}"
+			aria-label="Relatório do dia"
+			title="Relatório do dia"
+			class="touch-target flex items-center justify-center rounded-(--radius-card) bg-white/10 px-3 text-xl"
+		>
+			📄
+		</a>
 	</header>
 
 	<nav class="sticky top-0 z-10 flex overflow-x-auto border-b border-ink/10 bg-white" aria-label="Seções do paciente">
@@ -142,7 +151,7 @@
 				{/if}
 			{/if}
 		{:else if aba === 'afericoes'}
-			<p class="p-6 text-center text-sm text-ink/50">Aferições chegam na Fase 8.</p>
+			<AfericoesTab patientId={data.paciente.id} />
 		{:else}
 			<dl class="flex flex-col gap-4">
 				<div>

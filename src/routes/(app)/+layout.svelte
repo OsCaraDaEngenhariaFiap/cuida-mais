@@ -1,7 +1,21 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import { page } from '$app/state';
+	import { reavaliarAlertas } from '$lib/services/alertas-engine';
+	import { atualizarContagemAlertas, contagemAlertas } from '$lib/stores/alertas.svelte';
 
 	let { children } = $props();
+
+	// §4: motor reavaliado ao abrir o app e a cada 60s por timer
+	onMount(() => {
+		const rodar = async () => {
+			await reavaliarAlertas();
+			await atualizarContagemAlertas();
+		};
+		void rodar();
+		const timer = setInterval(() => void rodar(), 60_000);
+		return () => clearInterval(timer);
+	});
 
 	const tabs = [
 		{
@@ -57,18 +71,27 @@
 						class="touch-target flex flex-col items-center justify-center gap-0.5 py-2 text-[11px] font-medium transition-colors
 							{ativo(tab.href) ? 'text-white' : 'text-white/50'}"
 					>
-						<svg
-							viewBox="0 0 24 24"
-							fill="none"
-							stroke="currentColor"
-							stroke-width="2"
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							class="size-6"
-							aria-hidden="true"
-						>
-							<path d={tab.icone} />
-						</svg>
+						<span class="relative">
+							<svg
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="currentColor"
+								stroke-width="2"
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								class="size-6"
+								aria-hidden="true"
+							>
+								<path d={tab.icone} />
+							</svg>
+							{#if tab.href === '/alertas' && contagemAlertas.total > 0}
+								<span
+									class="absolute -top-1.5 -right-2.5 flex h-4 min-w-4 items-center justify-center rounded-full px-1 text-[10px] font-bold text-white {contagemAlertas.criticos > 0 ? 'bg-critico' : 'bg-atencao'}"
+								>
+									{contagemAlertas.total}
+								</span>
+							{/if}
+						</span>
 						{tab.rotulo}
 					</a>
 				</li>

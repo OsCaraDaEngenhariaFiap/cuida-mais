@@ -23,10 +23,12 @@ export const alertsMock: AlertService = {
 
 	async criarSeNovo(dados) {
 		if (dados.referenciaId) {
+			// §4.5, escopado por paciente: a mesma referência (ex.: um MeasurementType)
+			// pode alertar em pacientes diferentes ao mesmo tempo
 			const duplicado = await db.alerts
 				.where('[tipo+referenciaId]')
 				.equals([dados.tipo, dados.referenciaId])
-				.filter((a) => !a.reconhecidoEm)
+				.filter((a) => !a.reconhecidoEm && a.patientId === dados.patientId)
 				.first();
 			if (duplicado) return null;
 		}
@@ -42,11 +44,11 @@ export const alertsMock: AlertService = {
 		});
 	},
 
-	async resolverPorReferencia(tipo, referenciaId) {
+	async resolverPorReferencia(tipo, referenciaId, patientId) {
 		await db.alerts
 			.where('[tipo+referenciaId]')
 			.equals([tipo, referenciaId])
-			.filter((a) => !a.reconhecidoEm)
+			.filter((a) => !a.reconhecidoEm && (!patientId || a.patientId === patientId))
 			.delete();
 	}
 };

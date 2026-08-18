@@ -1,8 +1,35 @@
+import Dexie from 'dexie';
 import { endOfDay, formatISO, startOfDay } from 'date-fns';
+import { avaliarLeitura } from '$lib/domain/alerts/leituras';
 import type { CareEvent, Reading } from '$lib/domain/types';
 import type { EventService } from '../types';
 import { db } from './db';
 import { novoId } from './ids';
+
+/** foraDoPadrao é calculado NA GRAVAÇÃO (§3.1): faixa/baseline/esperado pelo motor. */
+async function avaliarNovaLeitura(leitura: Reading): Promise<Reading> {
+	const tipo = await db.measurementTypes.get(leitura.measurementTypeId);
+	const campo = tipo?.campos.find((c) => c.chave === leitura.campo);
+	if (!campo) return leitura;
+	const anteriores = await db.readings
+		.where('[patientId+measurementTypeId+campo+aferidoEm]')
+		.between(
+			[leitura.patientId, leitura.measurementTypeId, leitura.campo, Dexie.minKey],
+			[leitura.patientId, leitura.measurementTypeId, leitura.campo, leitura.aferidoEm]
+		)
+		.reverse()
+		.limit(10)
+		.toArray();
+	const historico = anteriores
+		.map((r) => r.valorNum)
+		.filter((v): v is number => v !== undefined);
+	const resultado = avaliarLeitura(campo, leitura, historico);
+	return {
+		...leitura,
+		foraDoPadrao: resultado.foraDoPadrao,
+		motivoDesvio: resultado.motivo
+	};
+}
 
 export const eventsMock: EventService = {
 	// ISO com offset local ordena lexicograficamente dentro do mesmo dia
@@ -27,16 +54,18 @@ export const eventsMock: EventService = {
 			registradoEm: formatISO(new Date()),
 			sincronizado: false
 		};
-		// foraDoPadrao é calculado na gravação pelo motor de alertas (Fase 7);
-		// até lá, toda leitura nova entra como dentro do padrão.
-		const readings: Reading[] = leituras.map((l) => ({
-			...l,
-			id: novoId(),
-			eventId: evento.id,
-			patientId: evento.patientId,
-			foraDoPadrao: false,
-			sincronizado: false
-		}));
+		const readings: Reading[] = await Promise.all(
+			leituras
+				.map((l) => ({
+					...l,
+					id: novoId(),
+					eventId: evento.id,
+					patientId: evento.patientId,
+					foraDoPadrao: false,
+					sincronizado: false
+				}))
+				.map((r) => avaliarNovaLeitura(r))
+		);
 		await db.transaction('rw', [db.events, db.readings, db.tasks, db.alerts], async () => {
 			await db.events.add(evento);
 			if (readings.length > 0) await db.readings.bulkAdd(readings);

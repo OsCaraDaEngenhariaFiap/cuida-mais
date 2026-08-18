@@ -26,12 +26,16 @@ export class CuidaMaisDB extends Dexie {
 
 	constructor() {
 		super('cuida-mais');
-		this.version(1).stores({
+		// v2: índice simples patientId em readings — sentinelas minKey/maxKey do Dexie
+		// só valem no último slot de índice composto, então "todas as leituras do
+		// paciente" precisa de índice próprio.
+		this.version(2).stores({
 			caregivers: 'id, &email',
 			patients: 'id, caregiverId',
 			tasks: 'id, patientId',
 			events: 'id, taskId, [patientId+ocorridoEm]',
-			readings: 'id, eventId, [patientId+measurementTypeId+campo+aferidoEm], [patientId+measurementTypeId+aferidoEm]',
+			readings:
+				'id, eventId, patientId, [patientId+measurementTypeId+campo+aferidoEm], [patientId+measurementTypeId+aferidoEm]',
 			measurementTypes: 'id, &slug',
 			alerts: 'id, patientId, [tipo+referenciaId]',
 			shareLinks: 'token, patientId'

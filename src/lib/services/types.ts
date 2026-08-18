@@ -86,17 +86,19 @@ export interface MeasurementService {
 	): Promise<Reading[]>;
 	/** Leitura mais recente de qualquer campo do tipo — §4.3 (sem registro há X horas). */
 	ultimaLeituraDoTipo(patientId: UUID, measurementTypeId: UUID): Promise<Reading | undefined>;
+	/** Leituras marcadas fora do padrão — o motor gera os alertas a partir delas. */
+	leiturasForaDoPadrao(patientId: UUID): Promise<Reading[]>;
 	/** Pares tipo+campo já registrados do paciente — a aba Aferições nasce disso (§5). */
 	camposRegistrados(patientId: UUID): Promise<{ measurementTypeId: UUID; campo: string }[]>;
 }
 
 export interface AlertService {
 	listar(filtro?: { patientId?: UUID; somenteNaoReconhecidos?: boolean }): Promise<Alert[]>;
-	/** Deduplicação (§4.5): mesmo tipo + referenciaId não reconhecido → não cria, devolve null. */
+	/** Deduplicação (§4.5): mesmo tipo + referenciaId (+ paciente) não reconhecido → não cria, devolve null. */
 	criarSeNovo(dados: NovoAlert): Promise<Alert | null>;
 	reconhecer(id: UUID, caregiverId: UUID): Promise<void>;
 	/** Remove alertas não reconhecidos da referência (ex.: tarefa registrada resolve o alerta, §4.1). */
-	resolverPorReferencia(tipo: TipoAlerta, referenciaId: UUID): Promise<void>;
+	resolverPorReferencia(tipo: TipoAlerta, referenciaId: UUID, patientId?: UUID): Promise<void>;
 }
 
 export interface ShareService {

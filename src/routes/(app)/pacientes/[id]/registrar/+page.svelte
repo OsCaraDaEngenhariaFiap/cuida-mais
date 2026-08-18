@@ -6,6 +6,8 @@
 	import { statusDoRegistro } from '$lib/domain/schedule/ocorrencias';
 	import type { MeasurementType, TipoCuidado } from '$lib/domain/types';
 	import { services, type NovaReading } from '$lib/services';
+	import { reavaliarAlertas } from '$lib/services/alertas-engine';
+	import { atualizarContagemAlertas } from '$lib/stores/alertas.svelte';
 	import { preferencias } from '$lib/stores/preferencias.svelte';
 	import { TIPOS_CUIDADO } from '$lib/ui/tipos-cuidado';
 	import { comprimirImagem } from '$lib/utils/imagem';
@@ -113,6 +115,8 @@
 			},
 			leituras
 		);
+		await reavaliarAlertas();
+		await atualizarContagemAlertas();
 		await goto(`/pacientes/${data.paciente.id}`, { invalidateAll: true });
 	}
 </script>

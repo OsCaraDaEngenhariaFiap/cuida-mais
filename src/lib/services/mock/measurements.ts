@@ -54,11 +54,16 @@ export const measurementsMock: MeasurementService = {
 			.first();
 	},
 
-	async camposRegistrados(patientId) {
-		const lidas = await db.readings
-			.where('[patientId+measurementTypeId+aferidoEm]')
-			.between([patientId, Dexie.minKey, Dexie.minKey], [patientId, Dexie.maxKey, Dexie.maxKey])
+	async leiturasForaDoPadrao(patientId) {
+		return db.readings
+			.where('patientId')
+			.equals(patientId)
+			.filter((r) => r.foraDoPadrao)
 			.toArray();
+	},
+
+	async camposRegistrados(patientId) {
+		const lidas = await db.readings.where('patientId').equals(patientId).toArray();
 		const vistos = new Map<string, { measurementTypeId: string; campo: string }>();
 		for (const r of lidas) {
 			vistos.set(`${r.measurementTypeId}|${r.campo}`, {

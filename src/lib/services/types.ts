@@ -53,7 +53,7 @@ export interface TaskService {
 	obter(id: UUID): Promise<CareTask | undefined>;
 	criar(dados: NovaCareTask): Promise<CareTask>;
 	atualizar(id: UUID, mudancas: Partial<NovaCareTask>): Promise<CareTask>;
-	desativar(id: UUID): Promise<void>;
+	alternarAtivo(id: UUID, ativo: boolean): Promise<void>;
 	/** "Repor caixa" (§4.4): define a quantidade atual do estoque. */
 	reporEstoque(id: UUID, quantidade: number): Promise<CareTask>;
 }

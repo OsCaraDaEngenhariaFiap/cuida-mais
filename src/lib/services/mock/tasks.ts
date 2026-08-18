@@ -26,8 +26,8 @@ export const tasksMock: TaskService = {
 		return tarefa;
 	},
 
-	async desativar(id) {
-		await db.tasks.update(id, { ativo: false });
+	async alternarAtivo(id, ativo) {
+		await db.tasks.update(id, { ativo });
 	},
 
 	async reporEstoque(id, quantidade) {

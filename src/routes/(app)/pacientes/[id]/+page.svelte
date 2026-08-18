@@ -1,6 +1,11 @@
 <script lang="ts">
+	import { invalidateAll } from '$app/navigation';
 	import Avatar from '$lib/components/Avatar.svelte';
+	import TarefaForm from '$lib/components/TarefaForm.svelte';
 	import { calcularIdade } from '$lib/domain/idade';
+	import type { CareTask } from '$lib/domain/types';
+	import { services } from '$lib/services';
+	import { DIAS_SEMANA, TIPOS_CUIDADO } from '$lib/ui/tipos-cuidado';
 	import type { PageProps } from './$types';
 
 	let { data }: PageProps = $props();
@@ -13,6 +18,21 @@
 		{ id: 'afericoes', rotulo: 'Aferições' },
 		{ id: 'perfil', rotulo: 'Perfil' }
 	];
+
+	let editandoTarefa = $state<CareTask | 'nova' | null>(null);
+
+	async function fecharTarefa(salvou: boolean) {
+		editandoTarefa = null;
+		if (salvou) await invalidateAll();
+	}
+
+	async function alternarTarefa(tarefa: CareTask) {
+		await services.tasks.alternarAtivo(tarefa.id, !tarefa.ativo);
+		await invalidateAll();
+	}
+
+	const resumoDias = (dias: number[]) =>
+		dias.length === 7 ? 'Todos os dias' : dias.map((d) => DIAS_SEMANA[d]).join(' · ');
 </script>
 
 <svelte:head>
@@ -50,7 +70,76 @@
 		{#if aba === 'timeline'}
 			<p class="p-6 text-center text-sm text-ink/50">Linha do tempo chega na Fase 6.</p>
 		{:else if aba === 'rotinas'}
-			<p class="p-6 text-center text-sm text-ink/50">Rotinas chegam na Fase 5.</p>
+			{#if editandoTarefa}
+				<h2 class="mb-3 text-lg font-bold text-navy">
+					{editandoTarefa === 'nova' ? 'Nova rotina' : 'Editar rotina'}
+				</h2>
+				<TarefaForm
+					patientId={data.paciente.id}
+					tipos={data.tipos}
+					inicial={editandoTarefa === 'nova' ? undefined : editandoTarefa}
+					aoFechar={fecharTarefa}
+				/>
+			{:else}
+				<div class="mb-3 flex justify-end">
+					<button
+						onclick={() => (editandoTarefa = 'nova')}
+						class="touch-target rounded-(--radius-card) bg-navy px-4 text-sm font-semibold text-white"
+					>
+						+ Nova rotina
+					</button>
+				</div>
+				{#if data.tarefas.length === 0}
+					<div class="flex flex-col items-center gap-3 rounded-(--radius-card-lg) border border-dashed border-ink/20 p-8 text-center">
+						<p class="text-ink/60">Nenhuma rotina ainda.</p>
+						<button
+							onclick={() => (editandoTarefa = 'nova')}
+							class="touch-target rounded-(--radius-card) bg-navy px-5 text-sm font-semibold text-white"
+						>
+							Criar a primeira rotina
+						</button>
+					</div>
+				{:else}
+					<ul class="flex flex-col gap-3">
+						{#each data.tarefas as tarefa (tarefa.id)}
+							<li class="rounded-(--radius-card-lg) border border-ink/10 p-4 {tarefa.ativo ? '' : 'opacity-50'}">
+								<div class="flex items-start gap-3">
+									<span class="text-2xl" aria-hidden="true">{TIPOS_CUIDADO[tarefa.tipo].icone}</span>
+									<div class="min-w-0 flex-1">
+										<p class="font-semibold">{tarefa.titulo}</p>
+										<p class="text-sm text-ink/60">
+											{tarefa.horarios.join(' · ')} — {resumoDias(tarefa.diasSemana)}
+										</p>
+										{#if tarefa.medicacao}
+											<p class="text-sm text-ink/60">
+												{tarefa.medicacao.dose} · via {tarefa.medicacao.via}
+												{#if tarefa.medicacao.estoque}
+													· estoque: {tarefa.medicacao.estoque.quantidadeAtual}
+													{tarefa.medicacao.estoque.unidade}
+												{/if}
+											</p>
+										{/if}
+									</div>
+								</div>
+								<div class="mt-2 flex justify-end gap-1">
+									<button
+										onclick={() => (editandoTarefa = tarefa)}
+										class="touch-target px-3 text-sm font-medium text-cuidado"
+									>
+										Editar
+									</button>
+									<button
+										onclick={() => alternarTarefa(tarefa)}
+										class="touch-target px-3 text-sm font-medium {tarefa.ativo ? 'text-ink/50' : 'text-realizado'}"
+									>
+										{tarefa.ativo ? 'Desativar' : 'Ativar'}
+									</button>
+								</div>
+							</li>
+						{/each}
+					</ul>
+				{/if}
+			{/if}
 		{:else if aba === 'afericoes'}
 			<p class="p-6 text-center text-sm text-ink/50">Aferições chegam na Fase 8.</p>
 		{:else}

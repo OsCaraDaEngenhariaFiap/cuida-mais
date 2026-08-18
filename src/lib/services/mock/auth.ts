@@ -4,6 +4,7 @@ import type { AuthService } from '../types';
 import { db } from './db';
 import { hashSenha } from './hash';
 import { novoId } from './ids';
+import { gravarSessao, lerSessao, limparSessao } from './sessao';
 
 export const authMock: AuthService = {
 	async cadastrar({ nome, email, senha, fotoUrl }) {
@@ -20,18 +21,26 @@ export const authMock: AuthService = {
 			criadoEm: formatISO(new Date())
 		};
 		await db.caregivers.add(caregiver);
+		gravarSessao(caregiver.id);
 		return caregiver;
 	},
 
 	async login(email, senha) {
 		const caregiver = await db.caregivers.where('email').equals(email.trim().toLowerCase()).first();
-		return caregiver && caregiver.senhaHash === hashSenha(senha) ? caregiver : null;
+		if (!caregiver || caregiver.senhaHash !== hashSenha(senha)) return null;
+		gravarSessao(caregiver.id);
+		return caregiver;
 	},
 
-	// Persistência de sessão entra na Fase 2 (auth mock completo)
 	async sessaoAtual() {
-		return null;
+		const id = lerSessao();
+		if (!id) return null;
+		const caregiver = await db.caregivers.get(id);
+		if (!caregiver) limparSessao(); // sessão órfã (ex.: após reset de demo)
+		return caregiver ?? null;
 	},
 
-	async logout() {}
+	async logout() {
+		limparSessao();
+	}
 };

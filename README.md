@@ -8,6 +8,36 @@ ou de aferição fora do padrão. Especificação completa em [SPEC-cuidador-pwa
 · vite-plugin-pwa · LayerChart · date-fns · Vitest. App 100% client-side (`adapter-static`,
 sem backend nesta fase — tudo mockado localmente).
 
+## Como rodar localmente
+
+**Pré-requisito único:** [Docker Desktop](https://www.docker.com/products/docker-desktop/) (ou Docker Engine + Compose v2).
+Não precisa de Node instalado — tudo roda dentro dos containers.
+
+```sh
+git clone https://github.com/OsCaraDaEngenhariaFiap/cuida-mais.git
+cd cuida-mais
+docker compose up web          # primeira vez demora: baixa a imagem e instala as dependências
+```
+
+Abra <http://localhost:5173>. Para o build de produção (service worker, instalável, offline):
+
+```sh
+docker compose up preview      # http://localhost:8080
+```
+
+**Login de demonstração:** `joao@demo.com` / `123456`
+(o seed cria 3 pacientes, rotinas, aferições e dados que já acendem os 5 tipos de alerta no primeiro boot;
+"Resetar dados de demonstração" em Configurações volta tudo ao estado inicial).
+
+Testes e checagem de tipos:
+
+```sh
+docker compose run --rm web npm run test    # Vitest (domínio + serviços mock)
+docker compose run --rm web npm run check   # svelte-check
+```
+
+Para parar: `docker compose down`.
+
 ## Desenvolvimento (Docker)
 
 Todo o desenvolvimento roda em container — **não precisa de Node na máquina**.

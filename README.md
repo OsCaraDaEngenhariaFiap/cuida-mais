@@ -1,104 +1,475 @@
-# Cuida+ — PWA de Registro de Cuidados
+# 🌱 Safra Certa API
 
-PWA mobile-first para cuidadores registrarem os cuidados diários de seus pacientes:
-rotinas agendadas, linha do tempo do que foi feito e alertas automáticos de esquecimento
-ou de aferição fora do padrão. Especificação completa em [SPEC-cuidador-pwa.md](./SPEC-cuidador-pwa.md).
+Sistema de recomendação agrícola desenvolvido em Java com Spring Boot, capaz de fornecer recomendações de culturas agrícolas com base em informações de região, clima, solo e pH.
 
-**Stack**: SvelteKit 2 · Svelte 5 (runes) · TypeScript strict · Tailwind CSS 4 · Dexie (IndexedDB)
-· vite-plugin-pwa · LayerChart · date-fns · Vitest. App 100% client-side (`adapter-static`,
-sem backend nesta fase — tudo mockado localmente).
+---
 
-## Como rodar localmente
+# Objetivo
 
-**Pré-requisito único:** [Docker Desktop](https://www.docker.com/products/docker-desktop/) (ou Docker Engine + Compose v2).
-Não precisa de Node instalado — tudo roda dentro dos containers.
+O projeto tem como finalidade auxiliar produtores rurais na tomada de decisão sobre quais culturas possuem maior compatibilidade com determinada região, considerando fatores ambientais e climáticos.
 
-```sh
-git clone https://github.com/OsCaraDaEngenhariaFiap/cuida-mais.git
-cd cuida-mais
-docker compose up web          # primeira vez demora: baixa a imagem e instala as dependências
+A aplicação disponibiliza uma API REST protegida por autenticação JWT e documentada através do Swagger/OpenAPI.
+
+---
+
+# Tecnologias Utilizadas
+
+* Java 21
+* Spring Boot
+* Spring Security
+* JWT (JSON Web Token)
+* Spring Data JPA
+* Hibernate
+* Banco de Dados H2
+* Swagger / OpenAPI
+* Lombok
+* Maven
+
+---
+
+# Arquitetura do Projeto
+
+```text
+src/main/java/com/safra/certa
+
+├── config
+│   ├── SecurityConfig
+│   ├── JwtFilter
+│   ├── SwaggerConfig
+│   └── DataLoader
+│
+├── controller
+│   ├── AuthController
+│   ├── RegiaoController
+│   ├── CulturaController
+│   ├── ClimaController
+│   └── RecomendacaoController
+│
+├── dto
+│   ├── LoginRequest
+│   ├── RegisterRequest
+│   ├── RecomendacaoRequest
+│   ├── RecomendacaoResponse
+│   └── MensagemAnaliseDTO
+│
+├── entity
+│   ├── Usuario
+│   ├── Regiao
+│   ├── Cultura
+│   ├── Clima
+│   └── Recomendacao
+│
+├── repository
+│   ├── UsuarioRepository
+│   ├── RegiaoRepository
+│   ├── CulturaRepository
+│   ├── ClimaRepository
+│   └── RecomendacaoRepository
+│
+├── security
+│   └── JwtService
+│
+└── service
+    ├── AuthService
+    ├── RegiaoService
+    ├── CulturaService
+    ├── ClimaService
+    └── RecomendacaoService
 ```
 
-Abra <http://localhost:5173>. Para o build de produção (service worker, instalável, offline):
+---
 
-```sh
-docker compose up preview      # http://localhost:8080
+# Como Executar
+
+## Clonar o projeto
+
+```bash
+git clone https://github.com/seu-repositorio/safra-certa.git
 ```
 
-**Login de demonstração:** `joao@demo.com` / `123456`
-(o seed cria 3 pacientes, rotinas, aferições e dados que já acendem os 5 tipos de alerta no primeiro boot;
-"Resetar dados de demonstração" em Configurações volta tudo ao estado inicial).
+## Acessar o diretório
 
-Testes e checagem de tipos:
-
-```sh
-docker compose run --rm web npm run test    # Vitest (domínio + serviços mock)
-docker compose run --rm web npm run check   # svelte-check
+```bash
+cd safra-certa
 ```
 
-Para parar: `docker compose down`.
+## Compilar
 
-## Desenvolvimento (Docker)
-
-Todo o desenvolvimento roda em container — **não precisa de Node na máquina**.
-
-| Comando | O quê |
-| --- | --- |
-| `docker compose up web` | Dev com HMR em <http://localhost:5173> |
-| `docker compose up preview` | Build de produção (nginx) em <http://localhost:8080> |
-| `docker compose run --rm web npm run test` | Vitest dentro do container |
-| `docker compose run --rm web npm i <pkg>` | Instalar dependência |
-| `docker compose build --no-cache` | Rebuild após mudar dependências |
-
-Após instalar dependência nova, rode `docker compose build` para a imagem incorporar o
-`package.json` atualizado.
-
-## Testar o PWA no celular (precisa de HTTPS)
-
-Service worker e instalação só funcionam em **contexto seguro**. `localhost` conta;
-o IP da LAN (`http://192.168.x.x:5173`) **não** — o app abre, mas não instala e não
-registra o service worker. Duas saídas, nessa ordem de preferência:
-
-### 1. Túnel (recomendado)
-
-```sh
-docker compose up web
-cloudflared tunnel --url http://localhost:5173
+```bash
+mvn clean install
 ```
 
-O `cloudflared` imprime uma URL `https://…trycloudflare.com` — abra no celular.
-HTTPS válido, funciona em qualquer rede, zero configuração de certificado.
+## Executar
 
-### 2. mkcert (certificado local)
-
-1. Na máquina: `mkcert -install && mkdir -p certs && mkcert -key-file certs/key.pem -cert-file certs/cert.pem localhost 192.168.x.x` (use o IP da sua LAN).
-2. Descomente o bloco `server.https` (e o import de `node:fs`) no [vite.config.ts](./vite.config.ts).
-3. Descomente o volume `./certs` no [docker-compose.yml](./docker-compose.yml).
-4. Instale a CA do mkcert no celular (`mkcert -CAROOT` mostra o arquivo `rootCA.pem`; envie ao aparelho e instale como certificado confiável).
-5. `docker compose up web` e acesse `https://192.168.x.x:5173` no celular.
-
-## Troubleshooting
-
-- **HMR parece travado no dev**: o `devOptions.enabled: true` do vite-plugin-pwa deixa um
-  service worker ativo também no `vite dev`. Se a página parar de refletir mudanças sem
-  motivo, desregistre-o: DevTools → Application → Service Workers → **Unregister** + hard
-  reload (Cmd/Ctrl+Shift+R).
-- **Mudou dependência e o container não achou**: o `node_modules` do container vive num
-  volume anônimo — rode `docker compose build` e suba de novo.
-
-## Estrutura
-
-```
-src/
-  lib/
-    domain/        # regras puras (alertas, baseline) — TypeScript sem Svelte, testável
-    services/      # única camada que fala com storage (mock Dexie nesta fase)
-    stores/        # runes e stores nativos
-    components/
-  routes/
-    login/ · cadastro/      # públicas
-    (app)/                  # grupo protegido, com bottom tab bar
-    r/[token]/              # visão somente leitura do responsável
+```bash
+mvn spring-boot:run
 ```
 
-Fases de execução e critérios de aceite: §9 da [spec](./SPEC-cuidador-pwa.md).
+A aplicação ficará disponível em:
+
+```text
+http://localhost:8080
+```
+
+---
+
+# Banco de Dados H2
+
+Console:
+
+```text
+http://localhost:8080/h2-console
+```
+
+Configuração:
+
+```text
+JDBC URL: jdbc:h2:mem:testdb
+User: sa
+Password:
+```
+
+---
+
+# Swagger
+
+Documentação da API:
+
+```text
+http://localhost:8080/swagger
+```
+
+ou
+
+```text
+http://localhost:8080/swagger-ui/index.html
+```
+
+---
+
+# Autenticação JWT
+
+Todos os endpoints, exceto login e cadastro, exigem autenticação.
+
+Header obrigatório:
+
+```http
+Authorization: Bearer <TOKEN>
+```
+
+---
+
+# Fluxo de Teste
+
+## 1 - Cadastrar Usuário
+
+Endpoint:
+
+```http
+POST /auth/register
+```
+
+Body:
+
+```json
+{
+  "nome": "Murillo",
+  "email": "murillo@safra.com",
+  "senha": "123456"
+}
+```
+
+---
+
+## 2 - Realizar Login
+
+Endpoint:
+
+```http
+POST /auth/login
+```
+
+Body:
+
+```json
+{
+  "email": "murillo@safra.com",
+  "senha": "123456"
+}
+```
+
+Resposta:
+
+```json
+{
+  "token": "eyJhbGciOiJIUzI1NiJ9..."
+}
+```
+
+Copie o token retornado.
+
+---
+
+## 3 - Autorizar no Swagger
+
+Clique em:
+
+```text
+Authorize
+```
+
+Informe:
+
+```text
+Bearer eyJhbGciOiJIUzI1NiJ9...
+```
+
+Após isso todos os endpoints protegidos poderão ser testados.
+
+---
+
+# Endpoints Disponíveis
+
+## Autenticação
+
+### Registrar Usuário
+
+```http
+POST /auth/register
+```
+
+### Login
+
+```http
+POST /auth/login
+```
+
+---
+
+## Regiões
+
+### Listar Regiões
+
+```http
+GET /regioes
+```
+
+Exemplo:
+
+```json
+[
+  {
+    "id": 1,
+    "nome": "Londrina",
+    "estado": "PR",
+    "latitude": -23.30,
+    "longitude": -51.16
+  }
+]
+```
+
+---
+
+## Culturas
+
+### Listar Culturas
+
+```http
+GET /culturas
+```
+
+Exemplo:
+
+```json
+[
+  {
+    "id": 1,
+    "nome": "Soja",
+    "temperaturaMin": 20.0,
+    "temperaturaMax": 30.0,
+    "chuvaMin": 120,
+    "chuvaMax": 250
+  }
+]
+```
+
+---
+
+## Clima
+
+### Consultar Clima da Região
+
+```http
+GET /clima/{regiaoId}
+```
+
+Exemplo:
+
+```json
+{
+  "id": 1,
+  "temperatura": 25.4,
+  "chuva": 120,
+  "umidade": 68,
+  "fonte": "Mock"
+}
+```
+
+---
+
+## Recomendações
+
+### Gerar Recomendação
+
+```http
+POST /recomendacoes
+```
+
+Body:
+
+```json
+{
+  "regiaoId": 1,
+  "solo": "Argiloso",
+  "relevo": "Plano",
+  "ph": 6.2
+}
+```
+
+Resposta:
+
+```json
+{
+  "cultura": "Café",
+  "compatibilidade": 70,
+  "temperatura": 20.0,
+  "chuva": 120,
+  "ph": 6.2,
+  "mensagens": [
+    {
+      "status": "OK",
+      "descricao": "Temperatura prevista dentro da faixa ideal."
+    },
+    {
+      "status": "ALERTA",
+      "descricao": "Chuva abaixo do recomendado."
+    }
+  ]
+}
+```
+
+---
+
+### Consultar Histórico
+
+```http
+GET /recomendacoes
+```
+
+---
+
+# Tratamento de Erros
+
+## Token não informado
+
+```json
+{
+  "status": 401,
+  "erro": "Token não informado"
+}
+```
+
+## Token inválido
+
+```json
+{
+  "status": 401,
+  "erro": "Token inválido ou expirado"
+}
+```
+
+## Erro de validação
+
+```json
+{
+  "dataHora": "2026-06-05T00:30:00",
+  "status": 400,
+  "erro": "Campo obrigatório",
+  "path": "/auth/register"
+}
+```
+
+---
+
+# Dados Mockados
+
+Ao iniciar a aplicação são carregados automaticamente:
+
+### Região
+
+```text
+Londrina - PR
+```
+
+### Cultura
+
+```text
+Soja
+```
+
+### Clima
+
+Valores simulados gerados aleatoriamente:
+
+* Temperatura
+* Umidade
+* Chuva
+
+---
+
+# Próximos Passos
+
+* Integração com Oracle Database
+* Cálculo real de compatibilidade agrícola
+* Dashboard em Angular
+* Histórico de análises por usuário
+* Relatórios em PDF
+* Integração com mapas geográficos
+
+---
+
+# Observações da Implementação
+
+A interface web foi criada com foco informativo para o usuário final, permitindo a consulta de regiões, condições climáticas e recomendações agrícolas.
+
+As operações de atualização (PUT) e exclusão (DELETE) foram implementadas exclusivamente na API para fins administrativos e para atendimento aos requisitos técnicos da disciplina, podendo ser testadas através do Swagger ou de ferramentas como Postman.
+
+Dessa forma, o front-end mantém uma experiência simplificada para o usuário final, enquanto o backend disponibiliza todas as operações CRUD exigidas pelo projeto.
+
+---
+
+| Método | Endpoint | Descrição |
+|----------|----------|----------|
+| POST | /auth/register | Cadastro de usuário |
+| POST | /auth/login | Autenticação e geração de JWT |
+| GET | /regioes | Lista regiões |
+| PUT | /regioes/{id} | Atualiza uma região |
+| DELETE | /regioes/{id} | Remove uma região |
+| GET | /culturas | Lista culturas |
+| GET | /clima/{id} | Consulta clima da região |
+| POST | /recomendacoes | Gera recomendação agrícola |
+| GET | /recomendacoes | Consulta histórico |
+
+---
+
+# Autor
+
+Andre Ribeiro Leli - RM97780
+
+Daniel Alexandre Barcellos de Brito - RM98185
+
+Marcone Santos Ribeiro - RM552585
+
+Murillo Barbosa Lemos - M550445
+
+Projeto desenvolvido para fins acadêmicos e demonstração de conhecimentos em Java, Spring Boot, APIs REST, JWT e arquitetura de software.

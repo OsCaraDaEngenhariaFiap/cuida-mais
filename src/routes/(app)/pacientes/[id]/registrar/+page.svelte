@@ -96,28 +96,33 @@
 		if (erros.length > 0) return;
 
 		ocupado = true;
-		await services.events.criar(
-			{
-				patientId: data.paciente.id,
-				taskId: data.tarefa?.id,
-				tipo: tipoCuidado,
-				titulo: tituloFinal,
-				observacao: observacao.trim() || undefined,
-				ocorridoEm: formatISO(ocorrido),
-				registradoPor: data.cuidador.id,
-				status: data.tarefa ? statusDoRegistro(data.tarefa, ocorrido) : 'realizado',
-				fotoUrl: foto,
-				justificativaSemFoto:
-					semFotoNaMedicacao && justificativaSemFoto.trim() !== ''
-						? justificativaSemFoto.trim()
-						: undefined,
-				justificativaRetroativa: ehRetroativo ? justificativaRetroativa.trim() : undefined
-			},
-			leituras
-		);
-		await reavaliarAlertas();
-		await atualizarContagemAlertas();
-		await goto(`/pacientes/${data.paciente.id}`, { invalidateAll: true });
+		try {
+			await services.events.criar(
+				{
+					patientId: data.paciente.id,
+					taskId: data.tarefa?.id,
+					tipo: tipoCuidado,
+					titulo: tituloFinal,
+					observacao: observacao.trim() || undefined,
+					ocorridoEm: formatISO(ocorrido),
+					registradoPor: data.cuidador.id,
+					status: data.tarefa ? statusDoRegistro(data.tarefa, ocorrido) : 'realizado',
+					fotoUrl: foto,
+					justificativaSemFoto:
+						semFotoNaMedicacao && justificativaSemFoto.trim() !== ''
+							? justificativaSemFoto.trim()
+							: undefined,
+					justificativaRetroativa: ehRetroativo ? justificativaRetroativa.trim() : undefined
+				},
+				leituras
+			);
+			await reavaliarAlertas();
+			await atualizarContagemAlertas();
+			await goto(`/pacientes/${data.paciente.id}`, { invalidateAll: true });
+		} catch (falha) {
+			erros = [falha instanceof Error ? falha.message : 'Não foi possível salvar o registro'];
+			ocupado = false;
+		}
 	}
 </script>
 

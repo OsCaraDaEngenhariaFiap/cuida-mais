@@ -5,13 +5,17 @@ rotinas agendadas, linha do tempo do que foi feito e alertas automáticos de esq
 ou de aferição fora do padrão. Especificação completa em [SPEC-cuidador-pwa.md](./SPEC-cuidador-pwa.md).
 
 **Stack**: SvelteKit 2 · Svelte 5 (runes) · TypeScript strict · Tailwind CSS 4 · Dexie (IndexedDB)
-· vite-plugin-pwa · LayerChart · date-fns · Vitest. App 100% client-side (`adapter-static`,
-sem backend nesta fase — tudo mockado localmente).
+· vite-plugin-pwa · LayerChart · date-fns · Vitest. O frontend SvelteKit PWA é publicado na Vercel
+e usa o backend Spring Boot/Java 21 em `backend/` por meio do OCI API Gateway público. O backend
+roda em OCI Compute e persiste os fluxos de produção no Oracle Autonomous Database, no schema
+`CUIDA_APP`. Os mocks ficam restritos a testes e fixtures de desenvolvimento; Dexie/IndexedDB
+serve como cache e estado do cliente, não como fonte de verdade dos dados de domínio em produção.
 
 ## Como rodar localmente
 
-**Pré-requisito único:** [Docker Desktop](https://www.docker.com/products/docker-desktop/) (ou Docker Engine + Compose v2).
-Não precisa de Node instalado — tudo roda dentro dos containers.
+**Pré-requisito:** [Docker Desktop](https://www.docker.com/products/docker-desktop/) (ou Docker Engine + Compose v2)
+para o fluxo de desenvolvimento do frontend. O backend possui instruções próprias em
+[`backend/README.md`](./backend/README.md) e usa H2 no perfil de desenvolvimento; o perfil de produção usa Oracle.
 
 ```sh
 git clone https://github.com/OsCaraDaEngenhariaFiap/cuida-mais.git
@@ -25,9 +29,9 @@ Abra <http://localhost:5173>. Para o build de produção (service worker, instal
 docker compose up preview      # http://localhost:8080
 ```
 
-**Login de demonstração:** `joao@demo.com` / `123456`
-(o seed cria 3 pacientes, rotinas, aferições e dados que já acendem os 5 tipos de alerta no primeiro boot;
-"Resetar dados de demonstração" em Configurações volta tudo ao estado inicial).
+Para testar o frontend local, configure `PUBLIC_API_BASE_URL` apontando para uma API disponível.
+O cadastro e o login são feitos pelo backend. Fixtures e login de demonstração permanecem disponíveis
+somente nos testes/ambientes locais baseados em mock.
 
 Testes e checagem de tipos:
 
@@ -92,7 +96,7 @@ HTTPS válido, funciona em qualquer rede, zero configuração de certificado.
 src/
   lib/
     domain/        # regras puras (alertas, baseline) — TypeScript sem Svelte, testável
-    services/      # única camada que fala com storage (mock Dexie nesta fase)
+    services/      # camada única de acesso: API em produção, mocks em testes/dev
     stores/        # runes e stores nativos
     components/
   routes/

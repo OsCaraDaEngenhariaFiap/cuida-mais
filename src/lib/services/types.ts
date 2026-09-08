@@ -1,5 +1,5 @@
 // Contrato da camada de serviço (§8). A UI só fala com estas interfaces;
-// trocar o mock por API real deve mudar apenas src/lib/services/index.ts.
+// a implementação ativa é selecionada em src/lib/services/index.ts.
 import type {
 	Alert,
 	CareEvent,

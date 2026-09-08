@@ -4,6 +4,12 @@
 > Fase atual: **tudo mockado** (sem backend real).
 > v2 incorpora as decisões de produto da rodada de perguntas (ver §2).
 
+> **Nota de histórico:** esta é a especificação original da fase pré-backend. As referências a
+> “tudo mockado”, “sem backend” e backend fora de escopo descrevem a implementação inicial e foram
+> preservadas para manter o histórico do produto. A implementação final evoluiu para um backend real
+> em Spring Boot/Java 21, com persistência Oracle no schema `CUIDA_APP`. Para o estado atual, consulte
+> o [README](./README.md), o código-fonte e os documentos finais da entrega.
+
 ---
 
 ## 1. Objetivo

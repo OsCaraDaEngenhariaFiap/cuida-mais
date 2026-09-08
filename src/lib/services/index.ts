@@ -1,8 +1,10 @@
-// Implementação ativa da camada de serviço. Trocar o mock por uma API real,
-// no futuro, deve ser uma mudança neste arquivo e em nada mais (§8).
+// Implementação ativa da camada de serviço. Em browser, a fatia integrada usa
+// a API Oracle; testes Node e recursos ainda não suportados continuam no mock.
+import { browser } from '$app/environment';
 import { mockServices } from './mock';
+import { apiServices } from './api';
 import type { Services } from './types';
 
 export type * from './types';
 
-export const services: Services = mockServices;
+export const services: Services = browser ? apiServices : mockServices;

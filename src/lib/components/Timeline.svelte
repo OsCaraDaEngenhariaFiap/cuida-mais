@@ -150,7 +150,7 @@
 						{/if}
 						<div class="mt-1 flex items-center justify-between">
 							<p class="text-xs text-ink/40">por {nomeCuidador}</p>
-							{#if evento.status !== 'pulado'}
+							{#if evento.status !== 'pulado' && !evento.sincronizado}
 								<div class="flex gap-1">
 									<button
 										onclick={() => abrirEdicao(evento)}

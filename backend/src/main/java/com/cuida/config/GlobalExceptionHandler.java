@@ -5,6 +5,7 @@ import com.cuida.dto.ValidationErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 
@@ -47,6 +48,20 @@ public class GlobalExceptionHandler {
                                 .path(request.getRequestURI())
                                 .build()
                 );
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ErrorResponse> tratarForbidden(
+            AccessDeniedException ex,
+            HttpServletRequest request) {
+        return ResponseEntity
+                .status(HttpStatus.FORBIDDEN)
+                .body(ErrorResponse.builder()
+                        .dataHora(LocalDateTime.now())
+                        .status(403)
+                        .erro(ex.getMessage())
+                        .path(request.getRequestURI())
+                        .build());
     }
 
     @ExceptionHandler(Exception.class)

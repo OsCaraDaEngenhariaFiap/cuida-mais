@@ -164,13 +164,15 @@
 				<span>📲 Instalar aplicativo</span>
 			</button>
 		{/if}
-		<button
-			onclick={resetarDemo}
-			disabled={resetando}
-			class="touch-target flex items-center justify-between border-t border-ink/10 px-4 text-left text-atencao hover:bg-navy-50"
-		>
-			<span>{resetando ? 'Resetando…' : 'Resetar dados de demonstração'}</span>
-		</button>
+		{#if import.meta.env.DEV}
+			<button
+				onclick={resetarDemo}
+				disabled={resetando}
+				class="touch-target flex items-center justify-between border-t border-ink/10 px-4 text-left text-atencao hover:bg-navy-50"
+			>
+				<span>{resetando ? 'Resetando…' : 'Resetar dados de demonstração'}</span>
+			</button>
+		{/if}
 		<button
 			onclick={sair}
 			class="touch-target flex items-center justify-between border-t border-ink/10 px-4 text-left text-critico hover:bg-navy-50"

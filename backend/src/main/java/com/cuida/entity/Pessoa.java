@@ -24,4 +24,23 @@ public class Pessoa {
     private String identificacao;
 
     private LocalDate dataNascimento;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "usuario_id")
+    private Usuario usuario;
+
+    private String fotoUrl;
+    private String localizacao;
+    private String responsavelNome;
+    private String responsavelParentesco;
+    private String responsavelTelefone;
+    @Column(length = 2000)
+    private String alergias;
+    @Column(length = 2000)
+    private String condicoes;
+    @Column(length = 5000)
+    private String observacoes;
+    @Column(nullable = false)
+    @Builder.Default
+    private boolean ativo = true;
 }

@@ -13,7 +13,13 @@ public record NotaRequest(
         LocalDateTime quando,
 
         @NotBlank
-        String texto
+        String texto,
+
+        Long rotinaId,
+
+        String tipo,
+
+        String status
 
 ) {
 }

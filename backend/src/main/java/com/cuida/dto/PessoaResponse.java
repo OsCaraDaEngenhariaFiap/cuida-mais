@@ -6,6 +6,15 @@ public record PessoaResponse(
         Long id,
         String nome,
         String identificacao,
-        LocalDate dataNascimento
+        LocalDate dataNascimento,
+        String fotoUrl,
+        String localizacao,
+        String responsavelNome,
+        String responsavelParentesco,
+        String responsavelTelefone,
+        String alergias,
+        String condicoes,
+        String observacoes,
+        boolean ativo
 ) {
 }

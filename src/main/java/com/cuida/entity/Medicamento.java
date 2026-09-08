@@ -20,7 +20,15 @@ import java.util.Set;
 public class Medicamento extends EntidadeAuditavel {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator = "medicamento_seq"
+    )
+    @SequenceGenerator(
+            name = "medicamento_seq",
+            sequenceName = "SEQ_MEDICAMENTO",
+            allocationSize = 1
+    )
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)

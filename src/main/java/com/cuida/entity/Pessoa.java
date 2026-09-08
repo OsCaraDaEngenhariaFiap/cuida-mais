@@ -15,7 +15,15 @@ import java.time.LocalDate;
 public class Pessoa {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator = "pessoa_seq"
+    )
+    @SequenceGenerator(
+            name = "pessoa_seq",
+            sequenceName = "SEQ_PESSOA",
+            allocationSize = 1
+    )
     private Long id;
 
     @Column(nullable = false)

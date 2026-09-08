@@ -15,7 +15,15 @@ import java.time.LocalDate;
 public class Documento extends EntidadeAuditavel {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator = "documento_seq"
+    )
+    @SequenceGenerator(
+            name = "documento_seq",
+            sequenceName = "SEQ_DOCUMENTO",
+            allocationSize = 1
+    )
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)

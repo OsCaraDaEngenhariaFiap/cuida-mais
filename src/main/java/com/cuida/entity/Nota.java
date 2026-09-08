@@ -15,7 +15,15 @@ import java.time.LocalDateTime;
 public class Nota extends EntidadeAuditavel {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator = "nota_seq"
+    )
+    @SequenceGenerator(
+            name = "nota_seq",
+            sequenceName = "SEQ_NOTA",
+            allocationSize = 1
+    )
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -27,6 +35,7 @@ public class Nota extends EntidadeAuditavel {
     @Column(nullable = false)
     private LocalDateTime quando;
 
-    @Column(nullable = false, length = 5000)
+    @Lob
+    @Column(nullable = false)
     private String texto;
 }

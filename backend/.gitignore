@@ -24,8 +24,3 @@ Thumbs.db
 # Vite
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
-
-# Imported backend runtime/build output
-/backend/target
-/backend/.runtime-secrets
-/backend/wallet

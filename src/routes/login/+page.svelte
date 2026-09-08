@@ -11,13 +11,18 @@
 		e.preventDefault();
 		ocupado = true;
 		erro = '';
-		const cuidador = await services.auth.login(email, senha);
-		ocupado = false;
-		if (!cuidador) {
-			erro = 'E-mail ou senha inválidos';
-			return;
+		try {
+			const cuidador = await services.auth.login(email, senha);
+			if (!cuidador) {
+				erro = 'E-mail ou senha inválidos';
+				return;
+			}
+			await goto('/', { invalidateAll: true });
+		} catch (falha) {
+			erro = falha instanceof Error ? falha.message : 'Não foi possível entrar';
+		} finally {
+			ocupado = false;
 		}
-		await goto('/', { invalidateAll: true });
 	}
 </script>
 

@@ -1,12 +1,10 @@
 import { avaliarOcorrencias } from '$lib/domain/alerts/tarefas';
 import { proximasOcorrencias } from '$lib/domain/schedule/ocorrencias';
 import { services } from '$lib/services';
-import { reavaliarAlertas } from '$lib/services/alertas-engine';
 import type { PageLoad } from './$types';
 
 export const load: PageLoad = async ({ parent }) => {
 	const { cuidador } = await parent();
-	await reavaliarAlertas();
 	const agora = new Date();
 	const [pacientes, alertas] = await Promise.all([
 		services.patients.listar(cuidador.id),

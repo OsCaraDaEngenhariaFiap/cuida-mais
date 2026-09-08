@@ -7,8 +7,7 @@
 
 	let { children } = $props();
 
-	// §4: motor reavaliado ao abrir o app e a cada 60s por timer;
-	// no mesmo ciclo, os disparos de notificação do dia são (re)agendados (§7)
+	// §4: atualiza alertas e notificações uma vez ao abrir o app (§7)
 	onMount(() => {
 		const rodar = async () => {
 			await reavaliarAlertas();
@@ -16,8 +15,6 @@
 			await agendarNotificacoes();
 		};
 		void rodar();
-		const timer = setInterval(() => void rodar(), 60_000);
-		return () => clearInterval(timer);
 	});
 
 	const tabs = [

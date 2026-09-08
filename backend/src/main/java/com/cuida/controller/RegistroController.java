@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.security.core.Authentication;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -29,6 +30,7 @@ public class RegistroController {
     private final DocumentoService documentoService;
     private final NotaService notaService;
     private final HistoricoService historicoService;
+    private final AcessoService acessoService;
 
 
     // =========================================================
@@ -136,7 +138,10 @@ public class RegistroController {
     @ResponseStatus(HttpStatus.CREATED)
     public Nota cadastrarNota(
             @PathVariable Long pessoaId,
-            @Valid @RequestBody NotaRequest request) {
+            @Valid @RequestBody NotaRequest request,
+            Authentication auth) {
+
+        acessoService.pessoa(pessoaId, auth.getName());
 
         return notaService.criar(
                 pessoaId,
@@ -147,7 +152,10 @@ public class RegistroController {
 
     @GetMapping("/notas")
     public List<Nota> listarNotas(
-            @PathVariable Long pessoaId) {
+            @PathVariable Long pessoaId,
+            Authentication auth) {
+
+        acessoService.pessoa(pessoaId, auth.getName());
 
         return notaService.listar(pessoaId);
     }
@@ -156,7 +164,10 @@ public class RegistroController {
     @GetMapping("/notas/{notaId}")
     public Nota buscarNota(
             @PathVariable Long pessoaId,
-            @PathVariable Long notaId) {
+            @PathVariable Long notaId,
+            Authentication auth) {
+
+        acessoService.pessoa(pessoaId, auth.getName());
 
         return notaService.buscar(
                 pessoaId,
@@ -169,7 +180,10 @@ public class RegistroController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void excluirNota(
             @PathVariable Long pessoaId,
-            @PathVariable Long notaId) {
+            @PathVariable Long notaId,
+            Authentication auth) {
+
+        acessoService.pessoa(pessoaId, auth.getName());
 
         notaService.excluir(
                 pessoaId,

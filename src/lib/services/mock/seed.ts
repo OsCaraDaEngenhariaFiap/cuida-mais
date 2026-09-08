@@ -300,7 +300,8 @@ export async function seedDemo(db: CuidaMaisDB): Promise<void> {
 		patientId: antonio.id,
 		tipo: 'medicacao',
 		titulo: 'Metformina 850mg',
-		horarios: [format(subMinutes(agora, 70), 'HH:mm')],
+    // Mantém a ocorrência no mesmo dia do teste, inclusive quando a suíte roda perto da meia-noite.
+    horarios: ['00:00'],
 		diasSemana: [0, 1, 2, 3, 4, 5, 6],
 		toleranciaMin: 30,
 		lembreteAntesMin: 15,

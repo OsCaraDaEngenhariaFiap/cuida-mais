@@ -43,6 +43,7 @@ public class SecurityConfig {
                                 "/swagger",
                                 "/swagger/**",
                                 "/swagger-ui.html",
+                                "/public/compartilhamentos/**",
                                 "/h2-console/**"
                         )
                         .permitAll()

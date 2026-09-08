@@ -29,4 +29,13 @@ public class Nota extends EntidadeAuditavel {
 
     @Column(nullable = false, length = 5000)
     private String texto;
+
+    @Column(nullable = true)
+    @Builder.Default
+    private String status = "realizado";
+
+    private String motivoPulo;
+
+    private Long rotinaId;
+    private String tipo;
 }

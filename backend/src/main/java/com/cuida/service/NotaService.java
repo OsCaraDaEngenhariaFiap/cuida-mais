@@ -38,6 +38,9 @@ public class NotaService {
                 .titulo(request.titulo())
                 .quando(request.quando())
                 .texto(request.texto())
+                .rotinaId(request.rotinaId())
+                .tipo(request.tipo())
+                .status(request.status() == null ? "realizado" : request.status())
                 .build();
 
         return notaRepository.save(nota);

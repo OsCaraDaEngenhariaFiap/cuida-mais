@@ -27,7 +27,9 @@
 </script>
 
 <svelte:head>
-	<link rel="icon" href={favicon} />
+	<link rel="icon" type="image/svg+xml" href={favicon} />
+	<link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png" />
+	<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
 	{@html webManifestLink}
 </svelte:head>
 

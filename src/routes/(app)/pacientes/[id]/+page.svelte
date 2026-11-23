@@ -212,6 +212,6 @@
 		aria-label="Registro rápido"
 		class="fixed right-4 bottom-24 flex size-14 items-center justify-center rounded-full bg-cuidado text-3xl font-light text-white shadow-lg"
 	>
-		+
+		<span class="relative -top-0.5">+</span>
 	</a>
 </div>

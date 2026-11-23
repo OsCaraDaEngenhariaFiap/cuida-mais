@@ -11,6 +11,12 @@ roda em OCI Compute e persiste os fluxos de produção no Oracle Autonomous Data
 `CUIDA_APP`. Os mocks ficam restritos a testes e fixtures de desenvolvimento; Dexie/IndexedDB
 serve como cache e estado do cliente, não como fonte de verdade dos dados de domínio em produção.
 
+## Instalação e registro rápido
+
+O Cuida+ pode ser instalado como PWA em navegadores compatíveis. No iPhone ou iPad, abra o Cuida+ no Safari, toque em **Compartilhar** e escolha **Adicionar à Tela de Início**.
+
+Na tela inicial do app, **Registrar agora** leva à lista de pacientes. Escolha um paciente para continuar pelo fluxo existente de registro rápido; o atalho também segue disponível na tela de cada paciente.
+
 ## Como rodar localmente
 
 **Pré-requisito:** [Docker Desktop](https://www.docker.com/products/docker-desktop/) (ou Docker Engine + Compose v2)

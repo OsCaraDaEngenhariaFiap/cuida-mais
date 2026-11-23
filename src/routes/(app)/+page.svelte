@@ -51,6 +51,12 @@
 				<p class="text-xs text-ink/60">registros hoje</p>
 			</div>
 		</section>
+		<a
+			href="/pacientes"
+			class="touch-target mb-6 flex items-center justify-center rounded-(--radius-card-lg) bg-cuidado px-5 text-base font-semibold text-white shadow-sm"
+		>
+			Registrar agora
+		</a>
 
 		{#if data.criticos.length > 0}
 			<section class="mb-6">

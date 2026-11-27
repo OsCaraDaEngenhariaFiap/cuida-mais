@@ -1,6 +1,7 @@
 <script lang="ts">
 	import Avatar from '$lib/components/Avatar.svelte';
 	import { TIPOS_CUIDADO } from '$lib/ui/tipos-cuidado';
+	import { dispensarConvite, instalacao, instalarApp } from '$lib/stores/instalacao.svelte';
 	import type { PageProps } from './$types';
 
 	let { data }: PageProps = $props();
@@ -18,9 +19,46 @@
 
 <div class="mx-auto w-full max-w-lg p-4">
 	<header class="mb-4">
-		<h1 class="text-2xl font-bold text-marca">Olá, {data.cuidador.nome}</h1>
+		<h1 class="text-2xl font-bold text-marca">{data.cuidador.nome}</h1>
 		<p class="text-sm text-ink/60 first-letter:uppercase">{hoje}</p>
 	</header>
+
+	{#if
+		!instalacao.instalado &&
+		!instalacao.conviteDispensado &&
+		(instalacao.disponivel || instalacao.instrucoesSafariIOS)
+	}
+		<section
+			aria-label="Instalar Cuida+"
+			class="mb-4 flex items-center gap-3 rounded-(--radius-card-lg) border border-marca/20 bg-marca/5 p-3"
+		>
+			<div class="min-w-0 flex-1">
+				<p class="text-sm font-semibold text-marca">Instale o Cuida+ no seu dispositivo.</p>
+				{#if instalacao.instrucoesSafariIOS}
+					<p class="mt-1 text-xs text-ink/70">
+						No Safari, toque em Compartilhar e depois em Adicionar à Tela de Início.
+					</p>
+				{/if}
+			</div>
+			{#if instalacao.disponivel && !instalacao.instrucoesSafariIOS}
+				<button
+					type="button"
+					onclick={instalarApp}
+					class="touch-target rounded-(--radius-card) bg-marca px-3 text-sm font-semibold text-white"
+				>
+					Instalar
+				</button>
+			{/if}
+			<button
+				type="button"
+				aria-label="Agora não, dispensar convite de instalação"
+				onclick={dispensarConvite}
+				class="touch-target shrink-0 rounded-(--radius-card) px-2 text-sm text-ink/70"
+			>
+				Agora não
+			</button>
+		</section>
+	{/if}
 
 	{#if data.pacientes.length === 0}
 		<div class="flex flex-col items-center gap-4 rounded-(--radius-card-lg) border border-dashed border-ink/20 p-8 text-center">
@@ -52,10 +90,10 @@
 			</div>
 		</section>
 		<a
-			href="/pacientes"
+			href={data.ultimoPacienteId ? `/pacientes/${data.ultimoPacienteId}/registrar` : '/pacientes'}
 			class="touch-target mb-6 flex items-center justify-center rounded-(--radius-card-lg) bg-cuidado px-5 text-base font-semibold text-white shadow-sm"
 		>
-			Registrar agora
+			Registrar cuidado
 		</a>
 
 		{#if data.criticos.length > 0}
@@ -81,7 +119,7 @@
 		{/if}
 
 		<section class="mb-6">
-			<h2 class="mb-2 text-sm font-semibold uppercase tracking-wide text-ink/50">Seus pacientes</h2>
+			<h2 class="mb-2 text-sm font-semibold uppercase tracking-wide text-ink/50">Pacientes</h2>
 			<div class="flex gap-3 overflow-x-auto pb-1">
 				{#each data.pacientes as paciente (paciente.id)}
 					<a href="/pacientes/{paciente.id}" class="flex w-16 shrink-0 flex-col items-center gap-1">
@@ -96,7 +134,7 @@
 
 		<section class="mb-6">
 			<h2 class="mb-2 text-sm font-semibold uppercase tracking-wide text-ink/50">
-				Próximos horários de hoje
+				Próximos horários
 			</h2>
 			{#if data.proximos.length === 0}
 				<p class="rounded-(--radius-card-lg) border border-ink/10 p-4 text-sm text-ink/60">

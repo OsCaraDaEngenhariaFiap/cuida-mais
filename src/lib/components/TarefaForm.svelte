@@ -24,8 +24,8 @@
 		tipo: (inicial?.tipo ?? 'medicacao') as TipoCuidado,
 		titulo: inicial?.titulo ?? '',
 		descricao: inicial?.descricao ?? '',
-		horarios: inicial?.horarios.slice() ?? ['08:00'],
-		diasSemana: inicial?.diasSemana.slice() ?? [0, 1, 2, 3, 4, 5, 6],
+		horarios: inicial?.horarios.slice() ?? [],
+		diasSemana: inicial?.diasSemana.slice() ?? [],
 		toleranciaMin: inicial?.toleranciaMin ?? preferencias.toleranciaPadraoMin,
 		lembreteAntesMin: inicial?.lembreteAntesMin ?? preferencias.lembretePadraoMin,
 		measurementTypeIds: inicial?.measurementTypeIds?.slice() ?? [],
@@ -64,20 +64,8 @@
 		// $state entrega Proxies; IndexedDB só aceita dados clonáveis — snapshot primeiro
 		const plano = $state.snapshot(form);
 		const horarios = plano.horarios.filter((h) => /^\d{2}:\d{2}$/.test(h));
-		if (horarios.length === 0) {
-			erro = 'Inclua pelo menos um horário';
-			return;
-		}
-		if (form.diasSemana.length === 0) {
-			erro = 'Escolha pelo menos um dia da semana';
-			return;
-		}
-		if (form.tipo === 'medicao' && form.measurementTypeIds.length === 0) {
+		if (plano.tipo === 'medicao' && plano.measurementTypeIds.length === 0) {
 			erro = 'Escolha o que aferir';
-			return;
-		}
-		if (form.tipo === 'medicacao' && form.dose.trim() === '') {
-			erro = 'Informe a dose da medicação';
 			return;
 		}
 		ocupado = true;
@@ -150,13 +138,12 @@
 	</label>
 
 	<fieldset>
-		<legend class="mb-1 text-sm font-medium text-ink/80">Horários *</legend>
+		<legend class="mb-1 text-sm font-medium text-ink/80">Horários</legend>
 		<div class="flex flex-col gap-2">
 			{#each form.horarios as _, i (i)}
 				<div class="flex items-center gap-2">
 					<input
 						type="time"
-						required
 						bind:value={form.horarios[i]}
 						class="touch-target flex-1 rounded-(--radius-card) border border-ink/20 px-4 text-base outline-marca"
 					/>
@@ -198,6 +185,7 @@
 			{/each}
 		</div>
 	</fieldset>
+	<p class="text-xs text-ink/60">Lembretes exigem ao menos um dia da semana e um horário.</p>
 
 	<div class="grid grid-cols-2 gap-3">
 		<label class="flex flex-col gap-1">
@@ -244,7 +232,7 @@
 			<legend class="px-1 text-sm font-semibold text-marca">Medicação</legend>
 			<div class="grid grid-cols-2 gap-3">
 				<label class="flex flex-col gap-1">
-					<span class="text-sm font-medium text-ink/80">Dose *</span>
+					<span class="text-sm font-medium text-ink/80">Dose (opcional)</span>
 					<input
 						type="text"
 						placeholder="50 mg, 10 gotas…"

@@ -21,7 +21,65 @@ const auth:Services['auth']={async cadastrar({nome,email,senha}){await get('/aut
 const body=(d:any)=>({nome:d.nome,dataNascimento:d.dataNascimento,identificacao:d.observacoes,fotoUrl:d.fotoUrl,localizacao:d.localizacao,responsavelNome:d.responsavel?.nome,responsavelParentesco:d.responsavel?.parentesco,responsavelTelefone:d.responsavel?.telefone,alergias:d.alergias?.join(', '),condicoes:d.condicoes?.join(', '),observacoes:d.observacoes});
 const patients:PatientService={async listar(c){return (await get<M[]>('/api/pessoas')).map(x=>pat(x,c));},async obter(id){return pat(await get<M>('/api/pessoas/'+id),(await auth.sessaoAtual())?.id||'api:unknown');},async criar(d){return pat(await get<M>('/api/pessoas',{method:'POST',body:JSON.stringify(body(d))}),d.caregiverId);},async atualizar(id,d){return pat(await get<M>('/api/pessoas/'+id,{method:'PUT',body:JSON.stringify(body(d))}),(await auth.sessaoAtual())?.id||'api:unknown');},async arquivar(id){await get('/api/pessoas/'+id,{method:'DELETE'});}};
 const tasks:TaskService={async listarPorPaciente(p,inc=false){return (await get<M[]>('/api/pessoas/'+p+'/rotinas?incluirInativas='+inc)).map(task);},async obter(id){return task(await get('/api/rotinas/'+id));},async criar(d){return task(await get('/api/pessoas/'+d.patientId+'/rotinas',{method:'POST',body:JSON.stringify(d)}));},async atualizar(id,d){return task(await get('/api/rotinas/'+id,{method:'PUT',body:JSON.stringify(d)}));},async alternarAtivo(id,a){await get('/api/rotinas/'+id,{method:'PATCH',body:JSON.stringify({ativo:a})});},async reporEstoque(id,q){return task(await get('/api/rotinas/'+id,{method:'PATCH',body:JSON.stringify({quantidadeAtual:q})}));}};
-const events:EventService={async listarPorDia(p,d){const c=await auth.sessaoAtual();const a=await get<M[]>('/api/registros/pessoas/'+p+'/notas');const day=format(d,'yyyy-MM-dd');return a.filter(x=>String(x.quando).startsWith(day)).map(x=>ev(x,p,c?.id||'api:unknown'));},async obter(id){throw Error('Evento '+id+' deve ser obtido pela listagem do paciente');},async criar(d,ls=[]){const n=await get<M>('/api/registros/pessoas/'+d.patientId+'/notas',{method:'POST',body:JSON.stringify({titulo:d.titulo,quando:localDateTime(d.ocorridoEm),texto:d.observacao||d.titulo,rotinaId:d.taskId?Number(d.taskId):undefined,tipo:d.tipo,status:d.status})});for(const l of ls)await get('/api/pessoas/'+d.patientId+'/leituras',{method:'POST',body:JSON.stringify({...l,aferidoEm:localDateTime(l.aferidoEm),measurementTypeId:Number(l.measurementTypeId)})});return ev(n,d.patientId,d.registradoPor);},async editar(id,d,reason){const n=await get<M>('/api/notas/'+id,{method:'PUT',body:JSON.stringify({titulo:d.titulo,quando:localDateTime(d.ocorridoEm),texto:d.observacao||d.titulo,motivoEdicao:reason})});return ev(n,String(n.pessoa?.id||d.patientId||''),d.registradoPor||'');},async marcarPulado(id,motivo){const n=await get<M>('/api/notas/'+id+'/pulado',{method:'PATCH',body:JSON.stringify({motivo})});return ev(n,String(n.pessoa?.id||n.pessoaId||''),'');}};
+const events: EventService = {
+	async listarHistorico(patientId) {
+		const cuidador = await auth.sessaoAtual();
+		const notas = await get<M[]>('/api/registros/pessoas/' + patientId + '/notas');
+		return notas.map((nota) => ev(nota, patientId, cuidador?.id || 'api:unknown'));
+	},
+	async listarPorDia(patientId, dia) {
+		const diaLocal = format(dia, 'yyyy-MM-dd');
+		return (await events.listarHistorico(patientId)).filter((evento) =>
+			String(evento.ocorridoEm).startsWith(diaLocal)
+		);
+	},
+	async obter(id) {
+		throw Error('Evento ' + id + ' deve ser obtido pela listagem do paciente');
+	},
+	async criar(dados, leituras = []) {
+		const nota = await get<M>('/api/registros/pessoas/' + dados.patientId + '/notas', {
+			method: 'POST',
+			body: JSON.stringify({
+				titulo: dados.titulo,
+				quando: localDateTime(dados.ocorridoEm),
+				texto: dados.observacao || dados.titulo,
+				rotinaId: dados.taskId ? Number(dados.taskId) : undefined,
+				tipo: dados.tipo,
+				status: dados.status
+			})
+		});
+		for (const leitura of leituras) {
+			await get('/api/pessoas/' + dados.patientId + '/leituras', {
+				method: 'POST',
+				body: JSON.stringify({
+					...leitura,
+					aferidoEm: localDateTime(leitura.aferidoEm),
+					measurementTypeId: Number(leitura.measurementTypeId)
+				})
+			});
+		}
+		return ev(nota, dados.patientId, dados.registradoPor);
+	},
+	async editar(id, mudancas, motivo) {
+		const nota = await get<M>('/api/notas/' + id, {
+			method: 'PUT',
+			body: JSON.stringify({
+				titulo: mudancas.titulo,
+				quando: localDateTime(mudancas.ocorridoEm),
+				texto: mudancas.observacao || mudancas.titulo,
+				motivoEdicao: motivo
+			})
+		});
+		return ev(nota, String(nota.pessoa?.id || mudancas.patientId || ''), mudancas.registradoPor || '');
+	},
+	async marcarPulado(id, motivo) {
+		const nota = await get<M>('/api/notas/' + id + '/pulado', {
+			method: 'PATCH',
+			body: JSON.stringify({ motivo })
+		});
+		return ev(nota, String(nota.pessoa?.id || nota.pessoaId || ''), '');
+	}
+};
 const measurements:MeasurementService={async listarTipos(i=false){return (await get<M[]>('/api/tipos-afericao?incluirInativas='+i)).map(mt);},async obterTipo(id){return mt(await get('/api/tipos-afericao/'+id));},async criarTipo(d){return mt(await get('/api/tipos-afericao',{method:'POST',body:JSON.stringify(d)}));},async atualizarTipo(id,d){return mt(await get('/api/tipos-afericao/'+id,{method:'PUT',body:JSON.stringify(d)}));},async alternarAtivo(id,a){await get('/api/tipos-afericao/'+id,{method:'PATCH',body:JSON.stringify({ativo:a})});},async leituras(p,t,c,l){const a=(await get<M[]>('/api/pessoas/'+p+'/leituras?tipo='+t+'&campo='+encodeURIComponent(c))).map(rd);return l?a.slice(0,l):a;},async ultimaLeituraDoTipo(p,t){return (await get<M[]>('/api/pessoas/'+p+'/leituras?tipo='+t)).map(rd)[0];},async leiturasForaDoPadrao(p){return (await get<M[]>('/api/pessoas/'+p+'/leituras')).filter(x=>x.foraDoPadrao).map(rd);},async camposRegistrados(p){const a=await get<M[]>('/api/pessoas/'+p+'/leituras');return [...new Map(a.map(x=>[x.measurementTypeId+'|'+x.campo,{measurementTypeId:String(x.measurementTypeId),campo:x.campo}])).values()];}};
 const alerts:AlertService={async listar(f={}){const q=f.patientId?'?patientId='+f.patientId:'';return (await get<M[]>('/api/alertas'+q)).map(al);},async criarSeNovo(d){const x=await get<M|null>('/api/alertas',{method:'POST',body:JSON.stringify({...d,patientId:Number(d.patientId),referenciaId:d.referenciaId==null?undefined:Number(d.referenciaId)})});return x?al(x):null;},async reconhecer(id){await get('/api/alertas/'+id+'/reconhecer',{method:'PATCH'});},async resolverPorReferencia(tipo,ref,pid){await get('/api/alertas/referencia/'+tipo+'/'+ref+(pid?'?patientId='+pid:''),{method:'DELETE'});}};
 const share:ShareService={async gerar(p){return get<ShareLink>('/api/pessoas/'+p+'/compartilhamento',{method:'POST'});},async ativo(p){return (await get<ShareLink|null>('/api/pessoas/'+p+'/compartilhamento'))||undefined;},async revogar(t){await get('/api/compartilhamentos/'+t,{method:'DELETE'});},async resolverToken(t){return (await get<ShareLink|null>('/public/compartilhamentos/'+t,{},false))||null;}};

@@ -61,6 +61,8 @@ export interface TaskService {
 export interface EventService {
 	/** Eventos do dia (00:00–24:00 locais), ordenados por ocorridoEm. */
 	listarPorDia(patientId: UUID, dia: Date): Promise<CareEvent[]>;
+	/** Histórico completo de eventos de cuidado do paciente. */
+	listarHistorico(patientId: UUID): Promise<CareEvent[]>;
 	obter(id: UUID): Promise<CareEvent | undefined>;
 	/** Grava evento + leituras na mesma transação (uma aferição = 1 evento + N leituras). */
 	criar(dados: NovoCareEvent, leituras?: NovaReading[]): Promise<CareEvent>;

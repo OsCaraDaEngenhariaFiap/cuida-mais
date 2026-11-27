@@ -13,9 +13,9 @@ serve como cache e estado do cliente, não como fonte de verdade dos dados de do
 
 ## Instalação e registro rápido
 
-O Cuida+ pode ser instalado como PWA em navegadores compatíveis. No iPhone ou iPad, abra o Cuida+ no Safari, toque em **Compartilhar** e escolha **Adicionar à Tela de Início**.
+O Cuida+ pode ser instalado como PWA. O convite aparece em navegadores compatíveis; no iPhone/iPad, abra no Safari, toque em **Compartilhar** e escolha **Adicionar à Tela de Início**. Você pode dispensar o convite.
 
-Na tela inicial do app, **Registrar agora** leva à lista de pacientes. Escolha um paciente para continuar pelo fluxo existente de registro rápido; o atalho também segue disponível na tela de cada paciente.
+Na tela inicial, **Registrar cuidado** abre um registro para o paciente com cuidado elegível mais recente; se não houver, abre a lista. O atalho também fica na tela de cada paciente.
 
 ## Como rodar localmente
 

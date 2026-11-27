@@ -44,6 +44,12 @@ export const eventsMock: EventService = {
 			)
 			.toArray();
 	},
+	async listarHistorico(patientId) {
+		return db.events
+			.where('[patientId+ocorridoEm]')
+			.between([patientId, Dexie.minKey], [patientId, Dexie.maxKey], true, true)
+			.toArray();
+	},
 
 	obter: (id) => db.events.get(id),
 
